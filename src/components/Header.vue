@@ -42,11 +42,11 @@ export default {
   methods:{
     HeaderJS()
     {
-      // $(".g-nav a").click(function (){
-      //   $(".g-nav a").removeClass("dashboard");
-      //   $(this).addClass("dashboard")
-      // })
-      $("a[href='"+ window.location.pathname +"']").addClass("dashboard");
+      $(".g-nav a").click(function (){
+        $(".g-nav a").removeClass("dashboard");
+        $(this).addClass("dashboard")
+      })
+      // $("a[href='"+ window.location.pathname +"']").addClass("dashboard");
 
     }
   },
