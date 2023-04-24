@@ -25,12 +25,13 @@
   </div>
   <!--  <router-view></router-view>-->
 </template>
-<style>
+<style scoped>
 .loginidex {
+  margin: 4%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-
+  align-items: center;
 }
 .login {
 
@@ -55,6 +56,20 @@
   transform: translate(-50%, -50%);
 }
 
+
+/* semantic color variables for this project */
+
+
+body {
+  transition: color 0.5s, background-color 0.5s;
+  line-height: 1.6;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+  Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-size: 15px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 input {
   width: 100%;
   height: 100%;
