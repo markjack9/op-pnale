@@ -2,18 +2,18 @@
   <PublicHeader></PublicHeader>
   <div class="left-rail">
     <el-menu
-        default-active="2"
+        default-active="0"
         class="el-menu-vertical-demo"
         :collapse="isCollapse"
         @open="handleOpen"
         @close="handleClose"
     >
       <el-menu-item index="1">
-        <el-icon><icon-menu /></el-icon>
+        <el-icon><Tickets /></el-icon>
         <template #title>系统日志</template>
       </el-menu-item>
       <el-menu-item index="2">
-        <el-icon><icon-menu /></el-icon>
+        <el-icon><AlarmClock /></el-icon>
         <template #title>报警日志</template>
       </el-menu-item>
       <el-menu-item index="3">
@@ -39,7 +39,7 @@ import {
   Document,
   Menu as IconMenu,
   Location,
-  Setting,
+  Setting, Tickets, AlarmClock,
 } from '@element-plus/icons-vue'
 
 const isCollapse = ref(false)

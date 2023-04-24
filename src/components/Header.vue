@@ -1,5 +1,4 @@
 <template>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
 
   <!--头部导航-->
   <div class="g-top-nav">
@@ -15,15 +14,15 @@
     </div>
     <div class="g-profile" >
       <div class="flex flex-wrap items-center">
-        <el-dropdown>
+        <el-dropdown @command="handleCommand">
           <el-button type="primary">
-           管理员<el-icon class="el-icon--right"></el-icon>
+           管理员<el-icon class="el-icon--right"><arrow-down /></el-icon>
           </el-button>
           <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item>用户信息</el-dropdown-item>
-              <el-dropdown-item>重置密码</el-dropdown-item>
-              <el-dropdown-item>退出</el-dropdown-item>
+            <el-dropdown-menu >
+              <el-dropdown-item  command="userinfo">用户信息</el-dropdown-item>
+              <el-dropdown-item  command="reset-password">重置密码</el-dropdown-item>
+              <el-dropdown-item  command="exit">退出</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -35,8 +34,19 @@
 </template>
 
 <script lang="ts" setup>
+import { ArrowDown } from '@element-plus/icons-vue'
+import router from '../router/index.js'
+const handleCommand = (command:string) => {
+  if (command === "userinfo") {
+    router.push({path: '/userinfo'})
+  } else if (command === "reset-password") {
+    router.push({path: '/resetpwd'})
+  } else if (command ==="exit") {
+    localStorage.clear()
+    router.push({path: '/login'})
+  }
 
-
+}
 </script>
 
 

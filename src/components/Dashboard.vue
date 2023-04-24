@@ -2,7 +2,7 @@
  <PublicHeader></PublicHeader>
   <div class="left-rail">
     <el-menu
-        default-active="2"
+        default-active="0"
         class="el-menu-vertical-demo"
         :collapse="isCollapse"
         @open="handleOpen"
@@ -13,7 +13,7 @@
         <template #title>系统信息</template>
       </el-menu-item>
       <el-menu-item index="2">
-        <el-icon><icon-menu /></el-icon>
+        <el-icon><Grid /></el-icon>
         <template #title>主机列表</template>
       </el-menu-item>
       <el-menu-item index="3">
@@ -21,7 +21,7 @@
         <template #title>报警事件</template>
       </el-menu-item>
       <el-menu-item index="4">
-        <el-icon><setting /></el-icon>
+        <el-icon><Notebook /></el-icon>
         <template #title>备忘录</template>
       </el-menu-item>
     </el-menu>
@@ -54,7 +54,7 @@ import {
   Document,
   Menu as IconMenu,
   Location,
-  Setting,
+  Setting, Notebook, Grid,
 } from '@element-plus/icons-vue'
 
 const isCollapse = ref(false)

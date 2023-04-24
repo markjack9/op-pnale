@@ -2,18 +2,18 @@
   <PublicHeader></PublicHeader>
   <div class="left-rail">
     <el-menu
-        default-active="2"
+        default-active="0"
         class="el-menu-vertical-demo"
         :collapse="isCollapse"
         @open="handleOpen"
         @close="handleClose"
     >
       <el-menu-item index="1">
-        <el-icon><icon-menu /></el-icon>
+        <el-icon><CreditCard /></el-icon>
         <template #title>ssh远程工具</template>
       </el-menu-item>
       <el-menu-item index="2">
-        <el-icon><icon-menu /></el-icon>
+        <el-icon><Monitor /></el-icon>
         <template #title>windows工具</template>
       </el-menu-item>
       <el-menu-item index="3">
@@ -21,7 +21,7 @@
         <template #title>日志记录</template>
       </el-menu-item>
       <el-menu-item index="4">
-        <el-icon><setting /></el-icon>
+        <el-icon><Files /></el-icon>
         <template #title>文件管理</template>
       </el-menu-item>
     </el-menu>
@@ -42,7 +42,7 @@ import {
   Document,
   Menu as IconMenu,
   Location,
-  Setting,
+  Setting, Monitor, CreditCard, Files,
 } from '@element-plus/icons-vue'
 
 const isCollapse = ref(false)

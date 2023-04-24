@@ -1,9 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from "../components/Login.vue"
-import Home from "../components/dashboard.vue"
+import Home from "../components/Dashboard.vue"
 import Setting from "../components/Setting.vue"
 import Manage from "../components/Manage.vue"
 import Recording from "@/components/Recording.vue";
+import UserInfo from "@/components/UserInfo.vue";
+import ResetPassword from "@/components/ResetPassword.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +34,14 @@ const router = createRouter({
       path: '/dashboard',
       component: Home
     },
+    {
+      path: "/userinfo",
+      component: UserInfo
+    },
+    {
+      path: "/resetpwd",
+      component: ResetPassword
+    }
 
   ]
 })
