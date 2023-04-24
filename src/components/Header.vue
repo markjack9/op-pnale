@@ -14,46 +14,28 @@
       <router-link to="recording" active-class="dashboard">记录</router-link>
     </div>
     <div class="g-profile" >
-      <div class="dropdown">
-        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
-         管理员
-        </a>
+      <div class="flex flex-wrap items-center">
+        <el-dropdown>
+          <el-button type="primary">
+           管理员<el-icon class="el-icon--right"></el-icon>
+          </el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item>用户信息</el-dropdown-item>
+              <el-dropdown-item>重置密码</el-dropdown-item>
+              <el-dropdown-item>退出</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
 
-        <div class="dropdown-menu">
-          <a class="dropdown-item" href="#">用户信息</a>
-          <a class="dropdown-item" href="#">重置密码</a>
-          <a class="dropdown-item" href="#">退出</a>
-        </div>
       </div>
     </div>
   </div>
 
 </template>
 
-<script>
+<script lang="ts" setup>
 
-export default {
-  data () {
-    return {}
-
-    },
-  methods: {
-
-  },
-  mounted() {
-    let Popper = document.createElement('script');
-    Popper.type = 'text/javascript';
-    Popper.src = 'https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js';
-    document.body.appendChild(Popper);
-    let Popper2 = document.createElement('script');
-    Popper2.type = 'text/javascript';
-    Popper2.src = 'https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js';
-    document.body.appendChild(Popper2);
-  },
-  components: {
-
-  }
-}
 
 </script>
 
@@ -126,11 +108,13 @@ export default {
   flex-flow: row;
 
 }
-.el-dropdown-link {
-  cursor: pointer;
-  color: #409EFF;
+.example-showcase .el-dropdown + .el-dropdown {
+  margin-left: 15px;
 }
-.el-icon-arrow-down {
-  font-size: 12px;
+.example-showcase .el-dropdown-link {
+  cursor: pointer;
+  color: var(--el-color-primary);
+  display: flex;
+  align-items: center;
 }
 </style>

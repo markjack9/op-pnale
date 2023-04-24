@@ -1,46 +1,58 @@
 <template>
-  <Header></Header>
+  <PublicHeader></PublicHeader>
   <div class="left-rail">
-    <el-tabs tab-position="left" style="height: 200px;">
-      <el-tab-pane label="主机设置">
-        <div>
-
-        </div>
-      </el-tab-pane>
-      <el-tab-pane label="报警事件处理">
-        <div>
-
-        </div>
-      </el-tab-pane>
-      <el-tab-pane label="报警媒介设置">
-        <div>
-
-        </div>
-      </el-tab-pane>
-      <el-tab-pane label="定时任务">
-        <div>
-
-        </div>
-      </el-tab-pane>
-    </el-tabs>
-
+    <el-menu
+        default-active="2"
+        class="el-menu-vertical-demo"
+        :collapse="isCollapse"
+        @open="handleOpen"
+        @close="handleClose"
+    >
+      <el-menu-item index="1">
+        <el-icon><icon-menu /></el-icon>
+        <template #title>主机设置</template>
+      </el-menu-item>
+      <el-menu-item index="2">
+        <el-icon><icon-menu /></el-icon>
+        <template #title>报警事件处理</template>
+      </el-menu-item>
+      <el-menu-item index="3">
+        <el-icon><document /></el-icon>
+        <template #title>报警媒介设置</template>
+      </el-menu-item>
+      <el-menu-item index="4">
+        <el-icon><setting /></el-icon>
+        <template #title>定时任务</template>
+      </el-menu-item>
+    </el-menu>
+    <el-radio-group v-model="isCollapse">
+    </el-radio-group>
+    <el-switch
+        v-model="isCollapse"
+        class="ml-2"
+        style="--el-switch-on-color: #ff4949; --el-switch-off-color:#13ce66 "
+    />
   </div>
 </template>
 
-<script>
-import Header from "./Header.vue"
+<script lang="ts" setup>
+import { ref } from 'vue'
+import PublicHeader from "./Header.vue"
+import {
+  Document,
+  Menu as IconMenu,
+  Location,
+  Setting,
+} from '@element-plus/icons-vue'
 
-export default {
-  data() {
-    return {};
-  },
-  methods: {
-  },
-  components: {
-  Header
-
-  }
-
+const isCollapse = ref(false)
+const UnCollapse = () => {
+}
+const handleOpen = (key: string, keyPath: string[]) => {
+  console.log(key, keyPath)
+}
+const handleClose = (key: string, keyPath: string[]) => {
+  console.log(key, keyPath)
 }
 </script>
 

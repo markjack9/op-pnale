@@ -152,7 +152,7 @@ input:focus ~ .top {
   transform: translate(-50%, -50%);
   text-align: center;
   padding: 5px;
-  width: 52%;
+  width: 200px;
   margin-top: 40px;
   background-color: #61dafb;
   color: #fff;
@@ -174,7 +174,7 @@ export default {
   },
   methods: {
     dologin() {
-      axios.post('http://192.168.0.117:8081/login', {
+      axios.post('http://192.168.31.99:8081/login', {
         username: this.userinfo.name,
         password: this.userinfo.password
       }).then((res)=> {
