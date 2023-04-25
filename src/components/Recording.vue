@@ -37,9 +37,7 @@ import { ref } from 'vue'
 import PublicHeader from "./Header.vue"
 import {
   Document,
-  Menu as IconMenu,
-  Location,
-  Setting, Tickets, AlarmClock,
+ Tickets, AlarmClock,
 } from '@element-plus/icons-vue'
 
 const isCollapse = ref(false)
