@@ -174,7 +174,7 @@ export default {
   },
   methods: {
     dologin() {
-      axios.post('http://192.168.0.117:8081/login', {
+      axios.post('http://192.168.31.99:8081/login', {
         username: this.userinfo.name,
         password: this.userinfo.password
       }).then((res)=> {
