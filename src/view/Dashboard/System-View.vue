@@ -101,6 +101,7 @@ onMounted(() => {
   margin: 20px 20px 20px 0px;
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .g-card{
@@ -110,6 +111,7 @@ onMounted(() => {
 }
 .g-context-dashboard {
   display: flex;
+  width: 100%;
 }
 .g-cadashboard {
   margin-left: 10px;

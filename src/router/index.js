@@ -4,7 +4,7 @@ import Home from "../components/Dashboard.vue"
 import Setting from "../components/Setting.vue"
 import Manage from "../components/Manage.vue"
 import Recording from "@/components/Recording.vue";
-import UserInfo from "@/components/UserInfo.vue";
+
 import ResetPassword from "@/components/ResetPassword.vue";
 
 const router = createRouter({
@@ -35,10 +35,6 @@ const router = createRouter({
       component: Home
     },
     {
-      path: "/userinfo",
-      component: UserInfo
-    },
-    {
       path: "/resetpwd",
       component: ResetPassword
     }
@@ -50,7 +46,8 @@ router.beforeEach((to, from, next) => {
   const user = JSON.parse(localStorage.getItem('loginResult'))
   if (!user && to.path !== '/login') {
     next('/login')
-  } else {
+  }
+  else {
     next()
   }
 })

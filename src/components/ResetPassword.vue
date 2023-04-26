@@ -9,7 +9,35 @@
       </template>
     </el-page-header>
   </div>
+  <div class="resetpassword">
+    <el-card>
+      <el-form
+          ref="ruleFormRef"
+          :model="ruleForm"
+          status-icon
+          :rules="rules"
+          label-width="120px"
+          class="demo-ruleForm"
+      >
+        <el-form-item label="密码" prop="pass">
+          <el-input v-model="ruleForm.pass" type="password" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="确认密码" prop="checkPass">
+          <el-input
+              v-model="ruleForm.checkPass"
+              type="password"
+              autocomplete="off"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button plain  type="primary" @click="submitForm(ruleFormRef)"
+          >确认</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
 
+
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -19,6 +47,68 @@ import { ElNotification as notify } from 'element-plus'
 const onBack = () => {
   notify('返回到仪表盘')
   router.push({path: '/dashboard'})
+}
+
+import { reactive, ref } from 'vue'
+import type { FormInstance, FormRules    } from 'element-plus'
+const ruleFormRef = ref<FormInstance>()
+
+
+const validatePass = (rule: any, value: any, callback: any) => {
+  if (value === '') {
+    callback(new Error('请输入密码'))
+  } else {
+    if (ruleForm.checkPass !== '') {
+      if (!ruleFormRef.value) return
+      ruleFormRef.value.validateField('checkPass', () => null)
+    }
+    callback()
+  }
+}
+const validatePass2 = (rule: any, value: any, callback: any) => {
+  if (value === '') {
+    callback(new Error('请在此输入密码！'))
+  } else if (value !== ruleForm.pass) {
+    callback(new Error("两次密码输入不匹配！"))
+  } else {
+    callback()
+  }
+}
+
+const ruleForm = reactive({
+  pass: '',
+  checkPass: '',
+})
+
+const rules = reactive<FormRules>({
+  pass: [{ validator: validatePass, trigger: 'blur' }],
+  checkPass: [{ validator: validatePass2, trigger: 'blur' }],
+})
+
+
+
+const passwordsetsucces = () => {
+  notify({
+    title: 'Success',
+    dangerouslyUseHTMLString: true,
+    message: '请重新登陆!',
+    type: 'success',
+  })
+  localStorage.clear()
+  router.push({path: '/login'})
+}
+const submitForm = (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  formEl.validate((valid) => {
+    if (valid) {
+      console.log('submit!')
+      passwordsetsucces()
+
+    } else {
+      console.log('error submit!')
+      return false
+    }
+  })
 }
 </script>
 
@@ -36,10 +126,9 @@ const onBack = () => {
 
 }
 
-.g-profile {
-  margin-left: auto;
-  margin-right: 50px;
-
+.resetpassword{
+  margin: 200px 200px 200px 200px;
+  width: 50%;
 }
 .g-profile span{
   text-decoration: none;

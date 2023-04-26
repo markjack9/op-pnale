@@ -20,7 +20,6 @@
           </el-button>
           <template #dropdown>
             <el-dropdown-menu >
-              <el-dropdown-item  command="userinfo">用户信息</el-dropdown-item>
               <el-dropdown-item  command="reset-password">重置密码</el-dropdown-item>
               <el-dropdown-item  command="exit">退出</el-dropdown-item>
             </el-dropdown-menu>
@@ -37,9 +36,7 @@
 import { ArrowDown } from '@element-plus/icons-vue'
 import router from '../router/index.js'
 const handleCommand = (command:string) => {
-  if (command === "userinfo") {
-    router.push({path: '/userinfo'})
-  } else if (command === "reset-password") {
+  if (command === "reset-password") {
     router.push({path: '/resetpwd'})
   } else if (command ==="exit") {
     localStorage.clear()
@@ -60,14 +57,15 @@ const handleCommand = (command:string) => {
 }
 .g-nav a{
   text-decoration: none;
-  color: black;
+  color: #040000;
   margin-right: 30px;
   font-size: 25px;
   font-weight: 600;
 
 }
+
 .g-nav a.dashboard {
-  color: rgb(22,115,232);
+  color: rgb(46, 172, 244);
   border-bottom: 5px solid rgb(22,115,232);
   padding-bottom: 14px;
 }
@@ -105,7 +103,9 @@ const handleCommand = (command:string) => {
   display: flex;
   flex-flow: row;
   align-items: center;
+  background-color: rgb(242, 247, 249);
 }
+
 
 .g-left-arrow img {
   margin: 0 5px 0 auto;
