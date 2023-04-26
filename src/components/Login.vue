@@ -34,7 +34,7 @@
                 <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">
+        <el-button type="primary" @click="forgotpwd">
           确认
         </el-button>
       </span>
@@ -101,7 +101,9 @@ import router from '../router/index.js'
 const dialogTableVisible = ref(false)
 const dialogFormVisible = ref(false)
 const formLabelWidth = '140px'
-
+const forgotpwd = () => {
+  console.log("密码已发送邮箱")
+}
 const form = reactive({
   name: '',
   email: '',
