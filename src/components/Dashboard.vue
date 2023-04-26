@@ -1,5 +1,4 @@
 <template>
-
  <PublicHeader></PublicHeader>
 
     <div  class="left-rail">
@@ -28,8 +27,6 @@
           <template #title>备忘录</template>
         </el-menu-item>
       </el-menu>
-      <el-radio-group v-model="isCollapse">
-      </el-radio-group>
       <el-switch
           v-model="isCollapse"
           class="ml-2"
@@ -53,11 +50,15 @@
   position: absolute;
   display: flex;
   flex-direction: column;
+ height: calc(100% - 71px);
+  overflow: auto;
+  width: calc(100% - 200px);
 }
 .left-rail{
   top: 71px;
-  height: 80%;
+  height: calc(100% - 71px);
   position: absolute;
+  overflow: auto;
 }
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width:200px;
@@ -76,7 +77,7 @@
 
 </style>
 <script lang="ts" setup>
-import { ref,shallowRef } from 'vue'
+import {onMounted, ref, shallowRef} from 'vue'
 import PublicHeader from "./Header.vue"
 import SystemView from "../view/Dashboard/System-View.vue";
 import AlarmView from "../view/Dashboard/Alarm-View.vue";
@@ -93,6 +94,7 @@ const isCollapse = ref(false)
 
 const comId = shallowRef(SystemView)
 
+
 const onswitchviewback = (key:number) => {
   if (key === 1 ){
     comId.value = SystemView
@@ -104,9 +106,14 @@ const onswitchviewback = (key:number) => {
     comId.value = NoteBook
   }
 }
+let ifcolapse:boolean = isCollapse.value
+const leftif= () =>{
+  if (ifcolapse == true) {
+    console.log("隐藏左侧菜单栏")
+  }
+}
 const handleOpen = (key: string, keyPath: string[]) => {
  console.log(key,keyPath)
-
 }
 
 const handleClose = (key: string, keyPath: string[]) => {

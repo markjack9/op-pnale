@@ -42,7 +42,7 @@
     </div>
   </div>
   <div class="progress-network">
-    <el-card >
+    <el-card class="progress-card">
       <div class="network-text" >
         <el-text class="network-text" size="large">流量统计</el-text>
       </div>
@@ -57,7 +57,7 @@
       </el-progress>
     </el-card >
   </div>
-  <div>
+  <div class="progress-network">
     <el-card>
 
     </el-card>
@@ -97,21 +97,25 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.progress-card {
+}
 .progress-network{
   margin: 20px 20px 20px 0px;
   display: flex;
   flex-direction: column;
-  width: 100%;
+  overflow: auto;
+  width: 93%;
 }
 
 .g-card{
-  width: 500px;
+  width: 600px;
   height: 200px;
   overflow: auto;
 }
 .g-context-dashboard {
   display: flex;
   width: 100%;
+  overflow: auto;
 }
 .g-cadashboard {
   margin-left: 10px;

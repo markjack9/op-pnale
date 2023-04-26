@@ -104,6 +104,7 @@ const handleCommand = (command:string) => {
   flex-flow: row;
   align-items: center;
   background-color: rgb(242, 247, 249);
+  z-index: 1000;
 }
 
 
