@@ -29,7 +29,6 @@
                   <el-form-item label="邮箱" :label-width="formLabelWidth">
                     <el-input v-model="form.name" autocomplete="off"/>
                   </el-form-item>
-
                 </el-form>
                 <template #footer>
       <span class="dialog-footer">
@@ -97,6 +96,7 @@ margin-top: 100px;
 import axios from 'axios';
 import {reactive, ref} from 'vue'
 import router from '../router/index.js'
+import { ElMessage } from 'element-plus'
 
 const dialogTableVisible = ref(false)
 const dialogFormVisible = ref(false)
@@ -114,7 +114,7 @@ const userinfo = reactive({
 })
 
 const dologin = () => {
-  axios.post('http://192.168.0.117:8081/login', {
+  axios.post('http://192.168.31.99:8081/login', {
     username: userinfo.name,
     password: userinfo.password
   }).then((res) => {
@@ -124,11 +124,13 @@ const dologin = () => {
       router.push({path: '/'})
 
     } else {
+      ElMessage.error('用户名密码错误')
       console.log(res.data.message)
     }
 
   }).catch(function (error) {
     console.log("错误信息", error)
+    ElMessage.error('用户名密码错误')
   });
 }
 
