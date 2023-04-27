@@ -64,7 +64,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" >
 import {onMounted, ref} from "vue";
 
 const percentage = ref(0)

@@ -1,13 +1,313 @@
 <template>
-  <div>主机列表</div>
+  <div class="host-statistics">
+    <div>
+      <div>
+        <el-card class="host-card-statistic">
+          <el-row :gutter="16">
+            <el-col :span="8">
+              <div class="statistic-card">
+                <el-statistic :value="10">
+                  <template #title>
+                    <div style="display: inline-flex; align-items: center">
+                      主机数量
+                    </div>
+                  </template>
+                </el-statistic>
+                <div class="statistic-footer">
+                  <div class="footer-item">
+                    <span>增加数量</span>
+                    <span class="green">
+              6
+              <el-icon>
+                <CaretTop />
+              </el-icon>
+            </span>
+                  </div>
+                </div>
+              </div>
+            </el-col>
+            <el-col :span="8">
+              <div class="statistic-card">
+                <el-statistic :value="5">
+                  <template #title>
+                    <div style="display: inline-flex; align-items: center">
+                      当前在线数量
+                    </div>
+                  </template>
+                </el-statistic>
+                <div class="statistic-footer">
+                  <div class="footer-item">
+                    <span>在线率</span>
+                    <span class="green">
+              50%
+              <el-icon>
+                <CaretBottom/>
+              </el-icon>
+            </span>
+                  </div>
+                </div>
+              </div>
+            </el-col>
+            <el-col :span="8">
+              <div class="statistic-card">
+                <el-statistic :value="50" title="New transactions today">
+                  <template #title>
+                    <div style="display: inline-flex; align-items: center">
+                      当前离线数量
+                    </div>
+                  </template>
+                </el-statistic>
+                <div class="statistic-footer">
+                  <div class="footer-item">
+                    <span>设备离线率</span>
+                    <span class="red">
+              50%
+              <el-icon>
+                <CaretTop/>
+              </el-icon>
+            </span>
+                  </div>
+                </div>
+              </div>
+            </el-col>
+          </el-row>
+        </el-card>
+      </div>
+      <div>
+        <el-card class="host-card">
+          <el-button @click="toggleSelection()">全选</el-button>
+          <el-button @click="toggleSelection()">取消勾选</el-button>
+          <el-button @click="todohostlist('del')">删除</el-button>
+          <el-button
+              @click="todohostlist('add')"
+              ref="buttonRef"
+              v-click-outside="onClickOutside">添加</el-button>
+          <el-popover
+            ref="popoverRef"
+            :virtual-ref="buttonRef"
+            trigger="click"
+            title="With title"
+            virtual-triggering
+        >
+          <span> Some content </span>
+        </el-popover>
+
+          <el-button @click="todohostlist('change')">修改</el-button>
+          <el-table
+              :data="tableData"
+              style="width: 100%"
+              class="host-card-list"
+          >
+            <el-table-column type="selection" width="60" >
+            <template #default="scope">{{ scope.row.date }}</template>
+            </el-table-column>
+            <el-table-column prop="hostid" label="序号" width="80" />
+            <el-table-column prop="hostname" label="主机名" width="120" />
+            <el-table-column prop="systemtype" label="系统版本" width="120" />
+            <el-table-column prop="hoststatus" label="主机状态" width="120" />
+            <el-table-column prop="hostip" label="主机IP" width="120" />
+            <el-table-column prop="hostissues" label="问题" width="120" />
+            <el-table-column prop="hostlocation" label="主机位置" width="120" />
+            <el-table-column prop="hostowner" label="主机负责人" width="120" />
+            <el-table-column prop="hostuptime" label="主机运行时间" width="120" />
+            <el-table-column prop="hostaddtime" label="添加时间" width="120" />
+          </el-table>
+        </el-card>
+      </div>
+    </div>
+
+  </div>
+
+
+
 </template>
 
-<script>
-export default {
-  name: "HostSetting"
+<script lang="ts" setup>
+import {
+  CaretBottom,
+  CaretTop,
+} from '@element-plus/icons-vue'
+import {
+  ElIcon,
+} from 'element-plus'
+import {  unref } from 'vue'
+
+
+import { ref } from 'vue'
+import { ElTable } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import axios from 'axios';
+import { ClickOutside as vClickOutside } from 'element-plus'
+const buttonRef = ref()
+const popoverRef = ref()
+const onClickOutside = () => {
+  unref(popoverRef).popperRef?.delayHide?.()
 }
+interface Hostinfo {
+  hostid: number
+  hostname: string
+  systemtype: string
+  hoststatus: boolean
+  hostip: string
+  hostissues: number
+  hostlocation: string
+  hostowner: string
+  hostuptime: string
+  hostaddtime: string
+}
+const multipleTableRef = ref<InstanceType<typeof ElTable>>()
+const toggleSelection = (rows?: Hostinfo[]) => {
+  if (!rows) {
+    multipleTableRef.value!.toggleAllSelection()
+
+  } else {
+    multipleTableRef.value!.clearSelection()
+  }
+}
+const multipleSelection = ref<Hostinfo[]>([])
+
+const tableData = ref<Hostinfo[]>([])
+
+const DeleteNoti = () => {
+  ElMessageBox.confirm(
+      '您确认删除此条记录吗？',
+      '警告',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+  )
+      .then(() => {
+        ElMessage({
+          type: 'success',
+          message: '删除成功',
+        })
+      })
+      .catch(() => {
+        ElMessage({
+          type: 'info',
+          message: '操作已取消',
+        })
+      })
+}
+const Additem = () => {
+
+}
+const todohostlist = (option:string) => {
+
+  if (option == 'del') {
+    DeleteNoti()
+    axios.post('http://192.168.0.117:8081/hostlistdata=?del', {
+
+    }).then((res) => {
+      if (res.data.code === 1000) {
+        console.log('success')
+      } else {
+        console.log(res.data.message)
+      }
+
+    }).catch(function (error) {
+      console.log("错误信息", error)
+    });
+  } else if (option == 'add'){
+    Additem
+    axios.post('http://192.168.0.117:8081/hostlistdata=?add', {
+
+    }).then((res) => {
+      if (res.data.code === 1000) {
+        console.log('success')
+      } else {
+        console.log(res.data.message)
+      }
+
+    }).catch(function (error) {
+      console.log("错误信息", error)
+    });
+  } else if (option == 'change'){
+    axios.post('http://192.168.0.117:8081/hostlistdata=?change', {
+
+    }).then((res) => {
+      if (res.data.code === 1000) {
+        console.log('success')
+      } else {
+        console.log(res.data.message)
+      }
+
+    }).catch(function (error) {
+      console.log("错误信息", error)
+    });
+  }
+
+}
+
+const hostsettingdata = () => {
+  axios.get('http://192.168.0.117:8081/hostlistdata?=get').then(
+      reponse =>{
+        console.log("请求数据成功了:",reponse.data)
+        tableData.value = reponse.data.List;
+      },
+      error => {
+        console.log("请求数据失败了:",error.message)
+      })
+}
+
 </script>
 
 <style scoped>
+:global(h2#card-usage ~ .example .example-showcase) {
+  background-color: var(--el-fill-color) !important;
+}
 
+.el-statistic {
+  --el-statistic-content-font-size: 28px;
+}
+.host-statistics {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow: auto;
+}
+.host-card {
+  width: 90%;
+  margin-top: 20px;
+}
+.host-card-statistic {
+  width: 90%;
+}
+.statistic-card {
+  height: 100%;
+  padding: 20px;
+  border-radius: 4px;
+  background-color: var(--el-bg-color-overlay);
+}
+
+.statistic-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--el-text-color-regular);
+  margin-top: 16px;
+}
+
+.statistic-footer .footer-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.statistic-footer .footer-item span:last-child {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 4px;
+}
+
+.green {
+  color: var(--el-color-success);
+}
+.red {
+  color: var(--el-color-error);
+}
 </style>

@@ -22,10 +22,7 @@
           <el-icon><document /></el-icon>
           <template #title>报警事件</template>
         </el-menu-item>
-        <el-menu-item @click="onswitchviewback(4)" index="4">
-          <el-icon><Notebook /></el-icon>
-          <template #title>备忘录</template>
-        </el-menu-item>
+
       </el-menu>
       <el-switch
           v-model="isCollapse"
@@ -81,7 +78,7 @@ import {onMounted, ref, shallowRef} from 'vue'
 import PublicHeader from "./Header.vue"
 import SystemView from "../view/Dashboard/System-View.vue";
 import AlarmView from "../view/Dashboard/Alarm-View.vue";
-import NoteBook from "../view/Dashboard/Notebook.vue";
+
 import HostlistView from "../view/Dashboard/Hostlist-View.vue";
 
 import {
@@ -102,8 +99,6 @@ const onswitchviewback = (key:number) => {
     comId.value = HostlistView
   }else if (key === 3 ) {
     comId.value = AlarmView
-  }else if (key === 4 ) {
-    comId.value = NoteBook
   }
 }
 let ifcolapse:boolean = isCollapse.value
