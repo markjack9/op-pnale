@@ -1,70 +1,69 @@
 <template>
-  <div class="g-context-dashboard">
-    <div>
-      <el-card class="box-card g-card">
-        <el-text class="network-text">{{systeminfo}}系统信息</el-text>
-        <el-scrollbar height="400px">
-          <p>{{systeminfotext}}</p>
-        </el-scrollbar>
-      </el-card>
+    <div class="g-context-dashboard">
+        <div>
+            <el-card class="box-card g-card">
+                <el-text class="network-text">系统信息</el-text>
+                <el-scrollbar height="400px">
+                    <p>系统信息</p>
+                </el-scrollbar>
+            </el-card>
+        </div>
+        <div class="dashboard-card">
+            <el-card class="g-cadashboard ">
+                <div id="cpubashboard">
+                    <div class="demo-progress">
+                        <el-progress type="dashboard" :percentage="cpu" :color="colors"/>
+                        <div class="dashboard-text">
+                            CPU
+                        </div>
+                    </div>
+                </div>
+            </el-card>
+            <el-card class="g-cadashboard ">
+                <div id="cpubashboard">
+                    <div class="demo-progress">
+                        <el-progress type="dashboard" :percentage="mp" :color="colors"/>
+                        <div class="dashboard-text">
+                            内存
+                        </div>
+                    </div>
+                </div>
+            </el-card>
+            <el-card class="g-cadashboard ">
+                <div id="cpubashboard">
+                    <div class="demo-progress">
+                        <el-progress type="dashboard" :percentage="fdp" :color="colors"/>
+                        <div class="dashboard-text">
+                            系统磁盘
+                        </div>
+                    </div>
+                </div>
+            </el-card>
+        </div>
     </div>
-    <div class="dashboard-card">
-      <el-card  class="g-cadashboard ">
-        <div id="cpubashboard">
-          <div class="demo-progress">
-            <el-progress type="dashboard" :percentage="percentage" :color="colors" />
-            <div class="dashboard-text">
-              CPU
+    <div class="progress-network">
+        <el-card class="progress-card">
+            <div class="network-text">
+                <el-text class="network-text" size="large">流量统计</el-text>
             </div>
-          </div>
-        </div>
-      </el-card>
-      <el-card  class="g-cadashboard ">
-        <div id="cpubashboard"  >
-          <div class="demo-progress">
-            <el-progress type="dashboard" :percentage="percentage" :color="colors" />
-            <div class="dashboard-text">
-              内存
-            </div>
-          </div>
-        </div>
-      </el-card>
-      <el-card  class="g-cadashboard ">
-        <div id="cpubashboard">
-          <div class="demo-progress">
-            <el-progress type="dashboard" :percentage="percentage" :color="colors" />
-            <div class="dashboard-text">
-              系统磁盘
-            </div>
-          </div>
-        </div>
-      </el-card>
-    </div>
-  </div>
-  <div class="progress-network">
-    <el-card class="progress-card">
-      <div class="network-text" >
-        <el-text class="network-text" size="large">流量统计</el-text>
-      </div>
 
-      <el-progress
-          :text-inside="true"
-          :stroke-width="30"
-          :percentage="50"
-          :color="colors"
-      >
-        <span class="network-info">{{ }}使用的流量/总流量</span>
-      </el-progress>
-    </el-card >
-  </div>
-  <div class="networkcarts">
-    <el-card>
-<div id="networkcartscpu" ref="networkcartscpu" style="width: 50%; height: 400px">1111</div>
-    </el-card>
-  </div>
+            <el-progress
+                    :text-inside="true"
+                    :stroke-width="30"
+                    :percentage="totalflow"
+                    :color="colors"
+            >
+                <span class="network-info">{{totalflow}}{{ totalflowunitstr() }}/总流量</span>
+            </el-progress>
+        </el-card>
+    </div>
+    <div class="speed-card">
+            <el-text class="speed-text">上传速率 {{ uns }}{{speedunit}}</el-text>
+            <el-text class="speed-text">下载速率 {{ dns }}{{ speedunit }}</el-text>
+    </div>
 </template>
 
-<script lang="ts"  setup>
+<script lang="ts" setup>
 import {onMounted, ref} from "vue";
 import * as echarts from 'echarts/core';
 import {TooltipComponent, TooltipComponentOption} from 'echarts/components';
@@ -78,128 +77,180 @@ echarts.use([TooltipComponent, GaugeChart, CanvasRenderer]);
 type EChartsOption = echarts.ComposeOption<
     TooltipComponentOption | GaugeSeriesOption
 >;
-
-const percentage = ref(0)
-
+let totalflow = ref(0)
+let totalflowdns = 0
+let totalflowuns = 0
+let totalflowunit = false
+const totalflowunitstr = () => {
+    if (totalflowunit === false){
+        return "MB"
+    }else {
+        return  "GB"
+    }
+}
+const mp = ref(0)
+const cpu = ref(0)
+const uns = ref(0)
+const fdp = ref(0)
+const dns = ref(0)
+let speedunit = "KB/s"
 const colors = [
-  { color: '#47c906', percentage: 20 },
-  { color: '#0fecec', percentage: 40 },
-  { color: '#ecbb22', percentage: 60 },
-  { color: '#930de8', percentage: 80 },
-  { color: '#ff0000', percentage: 100 },
+    {color: '#47c906', percentage: 20},
+    {color: '#0fecec', percentage: 40},
+    {color: '#ecbb22', percentage: 60},
+    {color: '#930de8', percentage: 80},
+    {color: '#ff0000', percentage: 100},
 ]
-const update ={
-  tooltip: {
-    formatter: '{a} <br/>{b} : {c}%'
-  },
-  series: [
-    {
-      name: 'Pressure',
-      type: 'gauge',
-      progress: {
-        show: true
-      },
-      detail: {
-        valueAnimation: true,
-        formatter: '{value}'
-      },
-      data: [
-        {
-          value: localStorage.getItem("systemupdate"),
-          name: 'SCORE'
-        }
-      ]
-    }
-  ]
-}
-const getdatadashboard = () => {
-  let reqInstance = axios.create({
-    headers: {
-      Authorization : localStorage.getItem('loginResult')
-    }
-})
-reqInstance.get('http://192.168.0.117:8081/system-view'
-).then((res) => {
-     console.log(res.data);
-}).catch(function (error) {
-        // handle error
-        console.log(error);
-      });
 
-
-}
-const networkcharts = (data: any,elementid: string) => {
-  const chartDom = document.getElementById(elementid) as HTMLElement;
-  const myChart = echarts.init(chartDom);
-  myChart.setOption(data);
-  localStorage.removeItem("systemupdate")
-}
 onMounted(() => {
-  setInterval(() => {
-    percentage.value = (percentage.value % 100) + 10
-    let reqInstance = axios.create({
-      headers: {
-        Authorization : localStorage.getItem('loginResult')
-      }
-    })
-    reqInstance.get('http://192.168.0.117:8081/system-view'
-    ).then((res) => {
-      localStorage.setItem("systemupdate", JSON.stringify(res.data));
-    }).catch(function (error) {
-      // handle error
-      console.log(error);
-    });
-  }, 500)
-  networkcharts(update,'networkcartscpu')
+    setInterval(() => {
+        axios.post('http://127.0.0.1:8081/systemview', {
+            parametertype: "cpu"
+        }).then((res) => {
+            cpu.value = Number(res.data.data)
+        }).catch(function (error) {
+            // handle error
+            console.log(error);
+        });
+        axios.post('http://127.0.0.1:8081/systemview', {
+            parametertype: "mp"
+        }).then((res) => {
+            mp.value = Number(res.data.data)
+        }).catch(function (error) {
+            // handle error
+            console.log(error);
+        });
+        axios.post('http://127.0.0.1:8081/systemview', {
+            parametertype: "fdp"
+        }).then((res) => {
+            fdp.value = Number(res.data.data)
+        }).catch(function (error) {
+            // handle error
+            console.log(error);
+        });
+        axios.post('http://127.0.0.1:8081/systemview', {
+            parametertype: "uns"
+        }).then((res) => {
+            uns.value = Number(res.data.data)
+
+            if (uns.value > 1024) {
+                uns.value =  Number((uns.value / 1024).toFixed(2))
+                 totalflowuns =  dns.value
+                speedunit = "MB/s"
+                console.log("上传流量MB/s",totalflowuns)
+            } else {
+                speedunit = "KB/s"
+                totalflowuns =  uns.value
+                console.log("上传流量KB/s",totalflowuns)
+            }
+        }).catch(function (error) {
+            // handle error
+            console.log(error);
+        });
+        axios.post('http://127.0.0.1:8081/systemview', {
+            parametertype: "dns"
+        }).then((res) => {
+            dns.value = Number(res.data.data)
+
+            if (dns.value > 1024) {
+                dns.value =  Number((dns.value / 1024).toFixed(2))
+                speedunit = "MB/s"
+                totalflowdns =  dns.value
+                console.log("下载流量MB/s",totalflowdns)
+            } else {
+                speedunit = "KB/s"
+               totalflowdns = dns.value
+                console.log("下载流量KB/s",totalflowdns)
+            }
+        }).catch(function (error) {
+            // handle error
+            console.log(error);
+        });
+        let totalflowsec =  totalflowdns + totalflowuns
 
 
+        if (totalflowsec > 1024) {
+            totalflowsec = totalflowsec /1024
+            console.log("每秒流量MB/s",totalflowsec)
+            if ( totalflow > 1024 && totalflowunitstr() === "MB") {
+                totalflow.value = (totalflow.value / 1024) + (totalflowsec / 1024)
+                totalflowunit = true
+                console.log("总流量GB",totalflow.value)
+            }
+        }else {
+            console.log("每秒流量KB/s",totalflowsec)
+            totalflow.value = totalflow.value + (totalflowsec /1024)
+            console.log("总流量MB",totalflow.value)
+        }
+
+        // totalflow = totalflow + totalflowsec
+        // if (totalflow > 1024){
+        //     totalflow = totalflow / 1024
+        //     totalflowunit = "GB"
+        // }
+        // console.log("流量总和",totalflow)
+    }, 1000)
 })
-
 </script>
 
 <style scoped>
-.networkcarts {
+.speed-text {
+font-size: 20px;
+    margin: 20px 20px 20px 0px;
+}
+.speed-card{
+    margin: 20px 20px 20px 0px;
+    display: flex;
+    flex-direction: row;
+    overflow: auto;
+    width: 93%;
+    border: 1px solid beige;
+    justify-content: space-around;
+}
 
-}
-.progress-card {
-}
-.progress-network{
-  margin: 20px 20px 20px 0px;
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-  width: 93%;
+.progress-network {
+    margin: 20px 20px 20px 0px;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    width: 93%;
 }
 
-.g-card{
-  width: 600px;
-  height: 200px;
-  overflow: auto;
+.g-card {
+    width: 600px;
+    height: 200px;
+    overflow: auto;
 }
+
 .g-context-dashboard {
-  display: flex;
-  width: 100%;
-  overflow: auto;
+    display: flex;
+    width: 100%;
+    overflow: auto;
 }
+
 .g-cadashboard {
-  margin-left: 10px;
+    margin-left: 10px;
 }
+
 .dashboard-text {
-  display: flex;
-  justify-content: center;
-  font-size: 20px;
+    display: flex;
+    justify-content: center;
+    font-size: 20px;
 }
+
 .g-context-dashboard .dashboard-card {
-  display: flex;
-  margin-left: 20px;
+    display: flex;
+    margin-left: 20px;
 }
-.progress-network .network-text{
-  margin-bottom: 20px;
-  font-size: 24px;
+
+.progress-network .network-text {
+    margin-bottom: 20px;
+    font-size: 24px;
 
 }
-.progress-network .network-info{
-  align-items: center;
-  font-size: 20px;
+
+.progress-network .network-info {
+    align-items: center;
+    font-size: 20px;
 }
 </style>

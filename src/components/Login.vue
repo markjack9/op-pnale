@@ -114,7 +114,7 @@ const userinfo = reactive({
 })
 
 const dologin = () => {
-  axios.post('http://192.168.31.99:8081/login', {
+  axios.post('http://127.0.0.1:8081/login', {
     username: userinfo.name,
     password: userinfo.password
   }).then((res) => {
