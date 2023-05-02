@@ -50,10 +50,10 @@
             <el-progress
                     :text-inside="true"
                     :stroke-width="30"
-                    :percentage="totalflow"
+                    :percentage="totalflowp"
                     :color="colors"
             >
-                <span class="network-info">{{totalflow}}{{ totalflowunitstr() }}/总流量</span>
+                <span class="network-info">{{totalflow}}{{ totalflowunitstr }}/{{speednetwork}}GB</span>
             </el-progress>
         </el-card>
     </div>
@@ -78,22 +78,18 @@ type EChartsOption = echarts.ComposeOption<
     TooltipComponentOption | GaugeSeriesOption
 >;
 let totalflow = ref(0)
+let totalflowp = ref(1)
 let totalflowdns = 0
 let totalflowuns = 0
-let totalflowunit = false
-const totalflowunitstr = () => {
-    if (totalflowunit === false){
-        return "MB"
-    }else {
-        return  "GB"
-    }
-}
+let totalflowunitstr = "MB"
 const mp = ref(0)
 const cpu = ref(0)
 const uns = ref(0)
 const fdp = ref(0)
 const dns = ref(0)
 let speedunit = "KB/s"
+const speednetwork = ref(500)
+
 const colors = [
     {color: '#47c906', percentage: 20},
     {color: '#0fecec', percentage: 40},
@@ -140,8 +136,8 @@ onMounted(() => {
                 console.log("上传流量MB/s",totalflowuns)
             } else {
                 speedunit = "KB/s"
-                totalflowuns =  uns.value
-                console.log("上传流量KB/s",totalflowuns)
+                totalflowuns =  Number((uns.value / 1024).toFixed(2))
+                console.log("上传流量MB/s",totalflowuns)
             }
         }).catch(function (error) {
             // handle error
@@ -155,12 +151,13 @@ onMounted(() => {
             if (dns.value > 1024) {
                 dns.value =  Number((dns.value / 1024).toFixed(2))
                 speedunit = "MB/s"
+
                 totalflowdns =  dns.value
                 console.log("下载流量MB/s",totalflowdns)
             } else {
                 speedunit = "KB/s"
-               totalflowdns = dns.value
-                console.log("下载流量KB/s",totalflowdns)
+               totalflowdns = Number((dns.value / 1024).toFixed(2))
+                console.log("下载流量MB/s",totalflowdns)
             }
         }).catch(function (error) {
             // handle error
@@ -168,27 +165,26 @@ onMounted(() => {
         });
         let totalflowsec =  totalflowdns + totalflowuns
 
-
-        if (totalflowsec > 1024) {
-            totalflowsec = totalflowsec /1024
-            console.log("每秒流量MB/s",totalflowsec)
-            if ( totalflow > 1024 && totalflowunitstr() === "MB") {
-                totalflow.value = (totalflow.value / 1024) + (totalflowsec / 1024)
-                totalflowunit = true
-                console.log("总流量GB",totalflow.value)
-            }
-        }else {
-            console.log("每秒流量KB/s",totalflowsec)
-            totalflow.value = totalflow.value + (totalflowsec /1024)
+        if (totalflowunitstr === "MB") {
+            totalflow.value = totalflow.value + totalflowsec
             console.log("总流量MB",totalflow.value)
+        } else if (totalflowunitstr === "GB"){
+
+            totalflowsec =  totalflowsec /1024
+            totalflow.value = totalflow.value + totalflowsec
+            console.log("总流量GB",totalflow.value)
+
+        }
+        if (totalflow.value > 1024 && totalflowunitstr === "MB" ) {
+            totalflowunitstr = "GB"
+            totalflow.value = totalflow.value /1024
+            totalflowp.value = totalflow.value / speednetwork.value
+
+        } else if (totalflow.value < 1024 && totalflowunitstr === "MB" ) {
+            totalflowp.value = totalflow.value / (speednetwork.value * 1024)
+
         }
 
-        // totalflow = totalflow + totalflowsec
-        // if (totalflow > 1024){
-        //     totalflow = totalflow / 1024
-        //     totalflowunit = "GB"
-        // }
-        // console.log("流量总和",totalflow)
     }, 1000)
 })
 </script>
