@@ -47,7 +47,7 @@
                 <el-text class="network-text" size="large">流量统计</el-text>
             </div>
 
-            <el-progress
+            <el-progress class="progress-style"
                     :text-inside="true"
                     :stroke-width="30"
                     :percentage="totalflowp"
@@ -185,11 +185,13 @@ onMounted(() => {
 
         }
 
-    }, 1000)
+    }, 5000)
 })
 </script>
 
 <style scoped>
+
+
 .speed-text {
 font-size: 20px;
     margin: 20px 20px 20px 0px;
@@ -248,5 +250,6 @@ font-size: 20px;
 .progress-network .network-info {
     align-items: center;
     font-size: 20px;
+  color: rgba(0, 0, 0, 0.28);
 }
 </style>

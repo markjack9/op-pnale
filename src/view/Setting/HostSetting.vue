@@ -75,16 +75,60 @@
       </div>
       <div>
         <el-card class="host-card">
-          <el-button @click="toggleSelection()">全选</el-button>
+          <el-button @click="toggleSelection(tableData)">全选</el-button>
           <el-button @click="toggleSelection()">取消勾选</el-button>
           <el-button @click="todohostlist('del')">删除</el-button>
-          <el-button @click="todoadditem = true">查看</el-button>
+          <el-button @click="openitem">查看</el-button>
+          <el-dialog
+              v-model="todoeseeitem"
+              :show-close="false"
+              title="主机信息">
+            <el-form :model="seeform" label-width="120px">
+              <el-form-item label="主机名">
+                <el-input v-model="form[0].hostname" disabled />
+              </el-form-item>
+              <el-form-item label="系统类型">
+                <el-select v-model="form[0].systemtype" disabled>
+                  <el-option label="windows" value="windows" />
+                  <el-option label="linux" value="linux" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="添加时间">
+                <el-col :span="11">
+                  <el-date-picker
+                      v-model="form[0].hostaddtime"
+                      type="date"
+                      placeholder=""
+                      style="width: 100%"
+                      disabled
+                  />
+                </el-col>
+              </el-form-item>
+              <el-form-item label="主机状态">
+                <el-switch v-model="hoststatus" disabled />
+              </el-form-item>
+              <el-form-item label="主机IP">
+                <el-input v-model="form[0].hostip" disabled />
+              </el-form-item>
+              <el-form-item label="主机负责人">
+                <el-input v-model="form[0].hostowner" disabled />
+              </el-form-item>
+              <el-form-item label="备注">
+                <el-input v-model="form[0].hostnote" type="textarea" disabled />
+              </el-form-item>
+              <el-form-item>
+                <el-button @click="todoeseeitem = false">关闭</el-button>
+              </el-form-item>
+            </el-form>
+          </el-dialog>
           <el-button @click="todoadditem = true">添加</el-button>
           <el-dialog
-              :model-value="todoadditem" title="添加新主机">
+              v-model="todoadditem"
+              :show-close="false"
+              title="主机信息">
             <el-form :model="form" label-width="120px">
               <el-form-item label="主机名">
-                <el-input v-model="form.hostname" />
+                <el-input v-model="form.hostname" placeholder="请填写主机名称" />
               </el-form-item>
               <el-form-item label="系统类型">
                 <el-select v-model="form.systemtype" placeholder="选择系统类型">
@@ -97,7 +141,7 @@
                   <el-date-picker
                       v-model="form.hostaddtime"
                       type="date"
-                      placeholder="选择时间"
+                      placeholder="添加主机时间"
                       style="width: 100%"
                   />
                 </el-col>
@@ -106,31 +150,31 @@
                 <el-switch v-model="form.delivery" />
               </el-form-item>
               <el-form-item label="主机IP">
-                <el-input v-model="form.hostip" />
+                <el-input v-model="form.hostip" placeholder="主机IP地址" />
               </el-form-item>
               <el-form-item label="主机负责人">
-                <el-input v-model="form.hostowner" />
+                <el-input v-model="form.hostowner" placeholder="主机管理员" />
               </el-form-item>
               <el-form-item label="备注">
-                <el-input v-model="form.hostnote" type="textarea" />
+                <el-input v-model="form.hostnote" type="textarea" placeholder="备注说明" />
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="additem">Create</el-button>
-                <el-button @click="todoadditem = false">Cancel</el-button>
+                <el-button type="primary" @click="todoadditem = false;todohostlist('add')">确定</el-button>
+                <el-button @click="todoadditem = false">取消</el-button>
               </el-form-item>
             </el-form>
           </el-dialog>
-          <el-button @click="todoadditem = true">编辑</el-button>
+          <el-button @click="todoedititem = true">编辑</el-button>
           <el-dialog
-
-              v-model="todoadditem"
+              v-model="todoedititem"
+              :show-close="false"
               title="编辑主机信息">
             <el-form :model="form" label-width="120px">
               <el-form-item label="主机名">
-                <el-input v-model="form.hostname" placeholder={{}} />
+                <el-input v-model="form[0].hostname" placeholder="" />
               </el-form-item>
               <el-form-item label="系统类型">
-                <el-select v-model="form.systemtype" placeholder={{}}>
+                <el-select v-model="form[0].systemtype" placeholder="">
                   <el-option label="windows" value="windows" />
                   <el-option label="linux" value="linux" />
                 </el-select>
@@ -138,40 +182,42 @@
               <el-form-item label="添加时间">
                 <el-col :span="11">
                   <el-date-picker
-                      v-model="form.hostaddtime"
+                      v-model="form[0].hostaddtime"
                       type="date"
-                      placeholder="{{}}"
+                      placeholder=""
                       style="width: 100%"
                   />
                 </el-col>
               </el-form-item>
               <el-form-item label="主机状态">
-                <el-switch v-model="form.delivery" />
+                <el-switch v-model="hoststatus" @click="clickhoststatus" />
               </el-form-item>
               <el-form-item label="主机IP">
-                <el-input v-model="form.hostip" placeholder={{}} />
+                <el-input v-model="form[0].hostip" placeholder="" />
               </el-form-item>
               <el-form-item label="主机负责人">
-                <el-input v-model="form.hostowner" placeholder={{}} />
+                <el-input v-model="form[0].hostowner" placeholder="" />
               </el-form-item>
               <el-form-item label="备注">
-                <el-input v-model="form.hostnote" type="textarea" placeholder={{}} />
+                <el-input v-model="form[0].hostnote" type="textarea" placeholder="" />
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="todoadditem = false;edititem()">Create</el-button>
-                <el-button @click="todoadditem = false">Cancel</el-button>
+                <el-button type="primary" @click="todoedititem = false;todohostlist('change')">确定</el-button>
+                <el-button @click="todoedititem = false">取消</el-button>
               </el-form-item>
             </el-form>
           </el-dialog>
           <el-table
+              ref="multipleTableRef"
               :data="tableData"
               style="width: 100%"
               class="host-card-list"
+              @selection-change="handleSelectionChange"
           >
-            <el-table-column type="selection" width="60" >
-            <template #default="scope">{{ scope.row.date }}</template>
+            <el-table-column type="selection" width="55" />
+            <el-table-column label="序号" width="120">
+              <template #default="scope">{{ scope.row.hostid }}</template>
             </el-table-column>
-            <el-table-column prop="hostid" label="序号" width="80" />
             <el-table-column prop="hostname" label="主机名" width="120" />
             <el-table-column prop="systemtype" label="系统版本" width="120" />
             <el-table-column prop="hoststatus" label="主机状态" width="120" />
@@ -198,7 +244,7 @@ import {
 import {
   ElIcon,
 } from 'element-plus'
-import { reactive } from 'vue'
+import {onMounted, reactive} from 'vue'
 
 
 import { ref } from 'vue'
@@ -210,46 +256,60 @@ interface Hostinfo {
   hostid: number
   hostname: string
   systemtype: string
-  hoststatus: boolean
+  hoststatus: number
   hostip: string
   hostlocation: string
   hostowner: string
   hostaddtime: string
+  hostnote: string
+}
+const hoststatus = ref(true)
+const clickhoststatus = () => {
+if ( form[0].hoststatus === 0){
+  form[0].hoststatus = 1
+}else if ( form[0].hoststatus === 1){
+  form[0].hoststatus = 0
+}
+
 }
 const multipleTableRef = ref<InstanceType<typeof ElTable>>()
-const form = reactive({
-  hostname: '',
-  systemtype: '',
-  hostaddtime: '',
-  delivery: '',
-  hostip: '',
-  hostlocation: '',
-  hostowner: '',
-  hostnote: '',
-})
-
+const multipleSelection = ref<Hostinfo[]>([])
 const toggleSelection = (rows?: Hostinfo[]) => {
-  if (!rows) {
-    multipleTableRef.value!.toggleAllSelection()
+  if (rows) {
+    rows.forEach((row) => {
+      // TODO: improvement typing when refactor table
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      multipleTableRef.value!.toggleAllSelection(row, undefined)
 
+    })
   } else {
     multipleTableRef.value!.clearSelection()
   }
 }
-const multipleSelection = ref<Hostinfo[]>([])
+const handleSelectionChange = (val: Hostinfo[]) => {
+  multipleSelection.value = val
+  form = val
+  if (form[0].hoststatus === 1) {
+    hoststatus.value = true
+  }else if (form[0].hoststatus === 0) {
+    hoststatus.value = false
+  }
 
+}
+
+
+
+let form: Hostinfo[]
+let formdata: Hostinfo
+
+const openitem = () => {
+  todoeseeitem.value = true
+}
 const tableData = ref<Hostinfo[]>([])
 const todoadditem = ref(false)
-
-const additem= () => {
-  this.$
-  todohostlist('add')
-  console.log('添加主机信息')
-}
-const edititem= () => {
-  todohostlist('change')
-  console.log('编辑主机信息')
-}
+const todoedititem = ref(false)
+const todoeseeitem = ref(false)
 
 
 const DeleteNoti = () => {
@@ -275,7 +335,9 @@ const DeleteNoti = () => {
         })
       })
 }
-
+onMounted(() => {
+  hostsettingdata()
+})
 const todohostlist = (option:string) => {
 
   if (option == 'del') {
@@ -306,8 +368,21 @@ const todohostlist = (option:string) => {
       console.log("错误信息", error)
     });
   } else if (option == 'change'){
-    axios.post('http://192.168.0.117:8081/hostlistdata=?change', {
-
+    formdata = form[0]
+    console.log(form[0])
+    axios.post('http://192.168.0.117:8081/hostlistdata', {
+      typeoperation:"edit",
+      hostlist: {
+        hostid: formdata.hostid,
+        hostname: formdata.hostname,
+        systemtype: formdata.systemtype,
+        hoststatus: formdata.hoststatus,
+        hostip: formdata.hostip,
+        hostlocation: formdata.hostlocation,
+        hostowner: formdata.hostowner,
+       hostaddtime: formdata.hostaddtime,
+        hostnote: formdata.hostnote
+      }
     }).then((res) => {
       if (res.data.code === 1000) {
         console.log('success')
@@ -323,14 +398,16 @@ const todohostlist = (option:string) => {
 }
 
 const hostsettingdata = () => {
-  axios.get('http://192.168.0.117:8081/hostlistdata?=get').then(
+  axios.post('http://127.0.0.1:8081/hostlistdata', {
+    typeoperation: "init"
+  }).then(
       reponse =>{
-        console.log("请求数据成功了:",reponse.data)
-        tableData.value = reponse.data.List;
+        console.log("请求数据成功了:",reponse.data.data)
+        tableData.value = reponse.data.data;
       },
       error => {
         console.log("请求数据失败了:",error.message)
-      })
+      });
 }
 
 </script>
