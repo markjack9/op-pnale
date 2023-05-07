@@ -80,7 +80,6 @@
       style="width: 100%"
       class="host-card-list"
   >
-    <el-table-column type="selection" width="60" />
     <el-table-column prop="hostid" label="序号" width="80" />
     <el-table-column prop="hostname" label="主机名" width="120" />
     <el-table-column prop="systemtype" label="系统版本" width="120" />
@@ -113,7 +112,7 @@ import {
   ElIcon,
 } from 'element-plus'
 
-import { ref } from 'vue'
+import {onMounted, ref} from 'vue'
 import { ElTable } from 'element-plus'
 import axios from 'axios';
 interface Hostinfo {
@@ -127,16 +126,21 @@ hostid: number
   hostowner: string
   hostuptime: string
 }
+onMounted(() => {
+    hostlistdata()
+})
 const tableData = ref<Hostinfo[]>([])
 const hostlistdata = () => {
-  axios.get('http://192.168.0.117:8081/hostlistdata').then(
-      reponse =>{
-        console.log("请求数据成功了:",reponse.data)
-        tableData.value = reponse.data.List;
-      },
-      error => {
-        console.log("请求数据失败了:",error.message)
-      })
+    axios.post('http://127.0.0.1:8081/hostlistdata', {
+        typeoperation: "init"
+    }).then(
+        reponse => {
+            console.log("请求数据成功")
+            tableData.value = reponse.data.data;
+        },
+        error => {
+            console.log("请求数据失败了:", error.message)
+        });
 }
 
 </script>

@@ -80,7 +80,6 @@
               style="width: 100%"
               class="host-card-list"
           >
-            <el-table-column type="selection" width="60" />
             <el-table-column prop="alarmid" label="序号" width="80" />
             <el-table-column prop="alarmhostname" label="主机名" width="120" />
             <el-table-column prop="alarmtype" label="报警类型" width="120" />
