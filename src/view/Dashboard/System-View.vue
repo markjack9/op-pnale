@@ -89,6 +89,7 @@ const fdp = ref(0)
 const dns = ref(0)
 let speedunit = "KB/s"
 const speednetwork = ref(500)
+const reflushtime = ref(5000)
 
 const colors = [
     {color: '#47c906', percentage: 20},
@@ -100,30 +101,30 @@ const colors = [
 
 onMounted(() => {
     setInterval(() => {
-        axios.post('http://127.0.0.1:8081/systemview', {
-            parametertype: "cpu"
-        }).then((res) => {
-            cpu.value = Number(res.data.data)
-        }).catch(function (error) {
-            // handle error
-            console.log(error);
-        });
-        axios.post('http://127.0.0.1:8081/systemview', {
-            parametertype: "mp"
-        }).then((res) => {
-            mp.value = Number(res.data.data)
-        }).catch(function (error) {
-            // handle error
-            console.log(error);
-        });
-        axios.post('http://127.0.0.1:8081/systemview', {
-            parametertype: "fdp"
-        }).then((res) => {
-            fdp.value = Number(res.data.data)
-        }).catch(function (error) {
-            // handle error
-            console.log(error);
-        });
+      axios.post('http://127.0.0.1:8081/systemview', {
+        parametertype: "cpu"
+      }).then((res) => {
+        cpu.value = Number(res.data.data)
+      }).catch(function (error) {
+        // handle error
+        console.log(error);
+      });
+      axios.post('http://127.0.0.1:8081/systemview', {
+        parametertype: "mp"
+      }).then((res) => {
+        mp.value = Number(res.data.data)
+      }).catch(function (error) {
+        // handle error
+        console.log(error);
+      });
+      axios.post('http://127.0.0.1:8081/systemview', {
+        parametertype: "fdp"
+      }).then((res) => {
+        fdp.value = Number(res.data.data)
+      }).catch(function (error) {
+        // handle error
+        console.log(error);
+      });
         axios.post('http://127.0.0.1:8081/systemview', {
             parametertype: "uns"
         }).then((res) => {
@@ -133,11 +134,11 @@ onMounted(() => {
                 uns.value =  Number((uns.value / 1024).toFixed(2))
                  totalflowuns =  dns.value
                 speedunit = "MB/s"
-                console.log("上传流量MB/s",totalflowuns)
+
             } else {
                 speedunit = "KB/s"
                 totalflowuns =  Number((uns.value / 1024).toFixed(2))
-                console.log("上传流量MB/s",totalflowuns)
+
             }
         }).catch(function (error) {
             // handle error
@@ -153,11 +154,9 @@ onMounted(() => {
                 speedunit = "MB/s"
 
                 totalflowdns =  dns.value
-                console.log("下载流量MB/s",totalflowdns)
             } else {
                 speedunit = "KB/s"
                totalflowdns = Number((dns.value / 1024).toFixed(2))
-                console.log("下载流量MB/s",totalflowdns)
             }
         }).catch(function (error) {
             // handle error
@@ -167,12 +166,10 @@ onMounted(() => {
 
         if (totalflowunitstr === "MB") {
             totalflow.value = totalflow.value + totalflowsec
-            console.log("总流量MB",totalflow.value)
         } else if (totalflowunitstr === "GB"){
 
             totalflowsec =  totalflowsec /1024
             totalflow.value = totalflow.value + totalflowsec
-            console.log("总流量GB",totalflow.value)
 
         }
         if (totalflow.value > 1024 && totalflowunitstr === "MB" ) {
@@ -185,7 +182,7 @@ onMounted(() => {
 
         }
 
-    }, 5000)
+    }, reflushtime.value)
 })
 </script>
 

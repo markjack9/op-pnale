@@ -6,20 +6,20 @@
         <el-row :gutter="16">
           <el-col :span="8">
             <div class="statistic-card">
-              <el-statistic :value="10">
+              <el-statistic :value="hosttotal">
                 <template #title>
                   <div style="display: inline-flex; align-items: center">
                     主机数量
-                    </div>
+                  </div>
                 </template>
               </el-statistic>
               <div class="statistic-footer">
                 <div class="footer-item">
-                  <span>增加数量</span>
+                  <span>新增主机数量</span>
                   <span class="green">
-              6
+              {{addhosttotal}}
               <el-icon>
-                <CaretTop />
+                <CaretTop/>
               </el-icon>
             </span>
                 </div>
@@ -28,10 +28,10 @@
           </el-col>
           <el-col :span="8">
             <div class="statistic-card">
-              <el-statistic :value="5">
+              <el-statistic :value="hostonline">
                 <template #title>
                   <div style="display: inline-flex; align-items: center">
-                   当前在线数量
+                    当前在线数量
                   </div>
                 </template>
               </el-statistic>
@@ -39,7 +39,7 @@
                 <div class="footer-item">
                   <span>在线率</span>
                   <span class="green">
-              50%
+              {{ onlinerate }}%
               <el-icon>
                 <CaretBottom/>
               </el-icon>
@@ -50,7 +50,7 @@
           </el-col>
           <el-col :span="8">
             <div class="statistic-card">
-              <el-statistic :value="50" title="New transactions today">
+              <el-statistic :value="hostoffline" title="New transactions today">
                 <template #title>
                   <div style="display: inline-flex; align-items: center">
                     当前离线数量
@@ -61,7 +61,7 @@
                 <div class="footer-item">
                   <span>设备离线率</span>
                   <span class="red">
-              50%
+              {{offlinerate}}%
               <el-icon>
                 <CaretTop/>
               </el-icon>
@@ -126,17 +126,59 @@ hostid: number
   hostowner: string
   hostuptime: string
 }
+const hosttotal = ref(0)
+const hostonline = ref(0)
+const  hostoffline = ref(0)
+const addhosttotal = ref(0)
+const onlinerate = ref(0)
+const offlinerate = ref(0)
 onMounted(() => {
     hostlistdata()
+  hoststatistics()
+
 })
+const hoststatistics = () => {
+
+  axios.post('http://127.0.0.1:8081/statisticsdata', {
+    statisticstype: "hosttotal",
+  }).then(
+      reponse => {
+        hosttotal.value = reponse.data.data;
+      },
+      error => {
+        console.log("请求数据失败了:", error.message)
+      });
+  axios.post('http://127.0.0.1:8081/statisticsdata', {
+    statisticstype: "hostonline",
+  }).then(
+      reponse => {
+        hostonline.value = reponse.data.data;
+        hostoffline.value= hosttotal.value - hostonline.value
+        onlinerate.value = Math.floor((hostonline.value / hosttotal.value) * 100)
+        offlinerate.value = Math.floor((hostoffline.value / hosttotal.value) * 100)
+      },
+      error => {
+        console.log("请求数据失败了:", error.message)
+      });
+  axios.post('http://127.0.0.1:8081/statisticsdata', {
+    statisticstype: "hostaddtoday"
+  }).then(
+      reponse => {
+        addhosttotal.value = reponse.data.data;
+      },
+      error => {
+        console.log("请求数据失败了:", error.message)
+      });
+}
 const tableData = ref<Hostinfo[]>([])
 const hostlistdata = () => {
     axios.post('http://127.0.0.1:8081/hostlistdata', {
-        typeoperation: "init"
+        typeoperation: "hostinit"
     }).then(
         reponse => {
             console.log("请求数据成功")
             tableData.value = reponse.data.data;
+            console.log(tableData.value)
         },
         error => {
             console.log("请求数据失败了:", error.message)
