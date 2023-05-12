@@ -116,7 +116,7 @@
               <el-form-item label="主机名">
                 <el-input v-model="addform.alarmhostname" placeholder=""/>
               </el-form-item>
-              <el-form-item label="系统类型">
+              <el-form-item label="报警类型">
                 <el-checkbox-group  v-model="alarmtype" @change="alarmtypeoptionchange">
                   <el-checkbox
                   v-for="item in alarmtypeoption"
@@ -152,7 +152,7 @@
             <el-table-column prop="alarmid" label="序号" width="80" align="center"/>
             <el-table-column prop="alarmhostname" label="主机名" width="120" align="center"/>
             <el-table-column prop="alarmtype" :formatter="alarmtypestring" align="center"  label="报警类型" width="120" class-name="alarmtypestr"/>
-            <el-table-column prop="alarmhoststatus" :formatter="statusicon" align="center" label="报警状态" width="120" />
+            <el-table-column prop="alarmstatus" :formatter="statusicon" align="center" label="报警状态" width="120" />
             <el-table-column prop="alarmowner" label="负责人" width="120" align="center" />
           </el-table>
         </el-card>
@@ -181,7 +181,7 @@ interface alarminfo {
   alarmid: string
   alarmhostname: string
   alarmtype: number
-  alarmhoststatus: number
+  alarmstatus: number
   alarmalarmip: string
   alarmissues: number
   alarmowner: string
@@ -205,10 +205,11 @@ const closedialog = (done) => {
   done();
 }
 const clickhoststatus = () => {
-  if (form.alarmhoststatus === 1 ) {
-    addform.alarmhoststatus = 0
-  } else if (form.alarmhoststatus === 0 ) {
-    addform.alarmhoststatus = 1
+  if (form.alarmstatus === 1 ) {
+    addform.alarmstatus = 0
+    console.log(form.alarmstatus)
+  } else if (form.alarmstatus === 0 ) {
+    addform.alarmstatus = 1
   }
 
 }
@@ -216,7 +217,7 @@ const addform = reactive({
   alarmid: "",
   alarmhostname: "",
   alarmtype: 0,
-  alarmhoststatus: 1,
+  alarmstatus: 1,
   alarmowner: "",
 })
 const alarmtype = ref([])
@@ -256,7 +257,6 @@ optionstr = 0
   for (let  i of alarmtype.value){
     optionstr= optionstr +i
   }
-  console.log(optionstr)
 }
 const handleSelectionChange = (val: alarminfo[]) => {
   multipleSelection.value = val
@@ -266,9 +266,9 @@ const handleSelectionChange = (val: alarminfo[]) => {
   addform.alarmhostname = form.alarmhostname
   addform.alarmtype = form.alarmtype
   addform.alarmowner = form.alarmowner
-  if (form.alarmhoststatus === 0){
+  if (form.alarmstatus === 0){
     hoststatus.value = false
-  }else if (form.alarmhoststatus === 1) {
+  }else if (form.alarmstatus === 1) {
     hoststatus.value = true
   }
 }
@@ -296,7 +296,7 @@ const Selectnoti = () => {
 
 
 const statusicon = (row)=> {
-  if (row.alarmhoststatus === 1) {
+  if (row.alarmstatus === 1) {
     return '开启'
   } else  {
     return '关闭'
@@ -334,6 +334,8 @@ const alarmtypestring= (row)=>{
     return '系统类\n应用服务类\n硬件类'
   }else  if (row.alarmtype === 3011){
     return '系统类\n网络类\n硬件类'
+  }else  if (row.alarmtype === 0){
+    return '未设置报警'
   }
 }
 onMounted(() => {
@@ -348,7 +350,7 @@ const todoalarmlist = (option: string) => {
       alarmlist: {
         alarmhostname: addform.alarmhostname,
         alarmtype: optionstr,
-        alarmhoststatus: addform.alarmhoststatus,
+        alarmstatus: addform.alarmstatus,
         alarmowner: addform.alarmowner,
         alarmid:addform.alarmid,
       }
