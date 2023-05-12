@@ -230,13 +230,13 @@
                         <el-table-column label="序号" width="120">
                             <template #default="scope">{{ scope.row.hostid }}</template>
                         </el-table-column>
-                        <el-table-column prop="hostname" label="主机名" width="120"/>
-                        <el-table-column prop="systemtype" label="系统版本" width="120"/>
-                        <el-table-column prop="hoststatus" label="主机状态" width="120"/>
-                        <el-table-column prop="hostip" label="主机IP" width="120"/>
-                        <el-table-column prop="hostlocation" label="主机位置" width="120"/>
-                        <el-table-column prop="hostowner" label="主机负责人" width="120"/>
-                        <el-table-column prop="hostaddtime" label="添加时间" width="120"/>
+                        <el-table-column prop="hostname" align="center" label="主机名" width="120"/>
+                        <el-table-column prop="systemtype" align="center"  label="系统版本" width="120"/>
+                        <el-table-column prop="hoststatus" align="center"  :formatter="statusicon" label="主机状态" width="120"/>
+                        <el-table-column prop="hostip" align="center"  label="主机IP" width="120"/>
+                        <el-table-column prop="hostlocation" align="center"  label="主机位置" width="120"/>
+                        <el-table-column prop="hostowner" align="center"  label="主机负责人" width="120"/>
+                        <el-table-column prop="hostaddtime" align="center"  label="添加时间" width="120"/>
                     </el-table>
                 </el-card>
             </div>
@@ -401,6 +401,13 @@ const DeleteNoti = () => {
             });
 
         })
+}
+const statusicon = (row)=> {
+  if (row.hoststatus === 1) {
+    return '在线'
+  } else  {
+    return '离线'
+  }
 }
 onMounted(() => {
     hostsettingdata()

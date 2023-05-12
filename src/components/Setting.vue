@@ -14,7 +14,7 @@
       </el-menu-item>
       <el-menu-item  @click="onswitchviewback(2)" index="2">
         <el-icon><icon-menu /></el-icon>
-        <template #title>报警事件处理</template>
+        <template #title>主机报警设置</template>
       </el-menu-item>
       <el-menu-item  @click="onswitchviewback(3)" index="3">
         <el-icon><setting /></el-icon>

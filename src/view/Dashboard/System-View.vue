@@ -4,7 +4,7 @@
             <el-card class="box-card g-card">
                 <el-text class="network-text">系统信息</el-text>
                 <el-scrollbar height="400px">
-                    <p>系统信息</p>
+                    <pre class="preclass">{{ systeminfo }}</pre>
                 </el-scrollbar>
             </el-card>
         </div>
@@ -77,6 +77,7 @@ echarts.use([TooltipComponent, GaugeChart, CanvasRenderer]);
 type EChartsOption = echarts.ComposeOption<
     TooltipComponentOption | GaugeSeriesOption
 >;
+const systeminfo=ref("")
 let totalflow = ref(0)
 let totalflowp = ref(1)
 let totalflowdns = 0
@@ -98,8 +99,22 @@ const colors = [
     {color: '#930de8', percentage: 80},
     {color: '#ff0000', percentage: 100},
 ]
+const serverinfo = () => {
+  axios.post('http://127.0.0.1:8081/clientdata', {
+    parametertype: "systeminfoget",
+    clientparame: {
+      optionip: "192.168.0.117",
+    }
+  }).then((res) => {
+    systeminfo.value = res.data.data
+  }).catch(function (error) {
+    // handle error
+    console.log(error);
+  });
+}
 
 onMounted(() => {
+  serverinfo()
     setInterval(() => {
       axios.post('http://127.0.0.1:8081/systemview', {
         parametertype: "cpu"
@@ -188,6 +203,15 @@ onMounted(() => {
 
 <style scoped>
 
+.preclass{
+  font-size: 14px;
+  font-family: initial;
+}
+
+
+.network-text{
+  font-size: 20px;
+}
 
 .speed-text {
 font-size: 20px;

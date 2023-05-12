@@ -80,18 +80,15 @@
       style="width: 100%"
       class="host-card-list"
   >
-    <el-table-column prop="hostid" label="序号" width="80" />
-    <el-table-column prop="hostname" label="主机名" width="120" />
-    <el-table-column prop="systemtype" label="系统版本" width="120" />
-    <el-table-column prop="hoststatus" label="主机状态" width="120" />
-    <el-table-column prop="hostip" label="主机IP" width="120" />
-    <el-table-column prop="hostissues" label="问题" width="120" />
-    <el-table-column prop="hostlocation" label="主机位置" width="120" />
-    <el-table-column prop="hostowner" label="主机负责人" width="120" />
-    <el-table-column prop="hostuptime" label="主机运行时间" width="120" />
-
-
-
+    <el-table-column prop="hostid" label="序号" width="80" align="center" />
+    <el-table-column prop="hostname" label="主机名" width="120" align="center" />
+    <el-table-column prop="systemtype" label="系统版本" width="120" align="center" />
+    <el-table-column prop="hoststatus" :formatter="statusicon" label="主机状态" width="120" align="center" />
+    <el-table-column prop="hostip" label="主机IP" width="120" align="center" />
+    <el-table-column prop="hostissues" label="问题" width="120" align="center" />
+    <el-table-column prop="hostlocation" label="主机位置" width="120" align="center" />
+    <el-table-column prop="hostowner" label="主机负责人" width="120" align="center" />
+    <el-table-column prop="hostuptime" label="主机运行时间" width="120" align="center" />
   </el-table>
 </el-card>
     </div>
@@ -137,6 +134,13 @@ onMounted(() => {
   hoststatistics()
 
 })
+const statusicon = (row)=> {
+      if (row.hoststatus === 1) {
+        return '在线'
+      } else  {
+        return '离线'
+      }
+}
 const hoststatistics = () => {
 
   axios.post('http://127.0.0.1:8081/statisticsdata', {
@@ -178,7 +182,6 @@ const hostlistdata = () => {
         reponse => {
             console.log("请求数据成功")
             tableData.value = reponse.data.data;
-            console.log(tableData.value)
         },
         error => {
             console.log("请求数据失败了:", error.message)
