@@ -6,7 +6,7 @@
           <el-row :gutter="16">
             <el-col :span="8">
               <div class="statistic-card">
-                <el-statistic :value="10">
+                <el-statistic :value="alarmtotal">
                   <template #title>
                     <div style="display: inline-flex; align-items: center">
                       报警数量总计
@@ -17,7 +17,7 @@
                   <div class="footer-item">
                     <span>增加数量</span>
                     <span class="red">
-              6
+              {{ alarmtodaytotal }}
               <el-icon>
                 <CaretTop />
               </el-icon>
@@ -28,7 +28,7 @@
             </el-col>
             <el-col :span="8">
               <div class="statistic-card">
-                <el-statistic :value="5">
+                <el-statistic :value="alarmonline">
                   <template #title>
                     <div style="display: inline-flex; align-items: center">
                       正在进行的报警
@@ -39,7 +39,7 @@
                   <div class="footer-item">
                     <span>今日新增报警</span>
                     <span class="red">
-              10
+              {{alarmaddtodayonline}}
               <el-icon>
                 <CaretTop/>
               </el-icon>
@@ -50,7 +50,7 @@
             </el-col>
             <el-col :span="8">
               <div class="statistic-card">
-                <el-statistic :value="50" title="New transactions today">
+                <el-statistic :value="alarmoffline" title="New transactions today">
                   <template #title>
                     <div style="display: inline-flex; align-items: center">
                       已处理报警数量
@@ -59,9 +59,9 @@
                 </el-statistic>
                 <div class="statistic-footer">
                   <div class="footer-item">
-                    <span>今日处理报警</span>
+                    <span>新增已处理报警</span>
                     <span class="green">
-              5
+              {{alarmofflinetoday}}
               <el-icon>
                 <CaretTop/>
               </el-icon>
@@ -80,18 +80,13 @@
               style="width: 100%"
               class="host-card-list"
           >
-            <el-table-column prop="alarmid" label="序号" width="80" />
-            <el-table-column prop="alarmhostname" label="主机名" width="120" />
-            <el-table-column prop="alarmtype" label="报警类型" width="120" />
-            <el-table-column prop="alarmhoststatus" label="报警状态" width="120" />
-            <el-table-column prop="alarmhostip" label="主机IP" width="120" />
-            <el-table-column prop="alarmissues" label="问题" width="120" />
-            <el-table-column prop="alarmhostlocation" label="主机位置" width="120" />
-            <el-table-column prop="alarmhostowner" label="负责人" width="120" />
-            <el-table-column prop="alarmtime" label="报警时间" width="120" />
-
-
-
+            <el-table-column prop="alarmid" label="报警id" width="80" align="center" />
+            <el-table-column prop="alarmhostname" label="主机名" width="120" align="center" />
+            <el-table-column prop="alarmtype" :formatter="alarmtypestring" label="报警类型" width="120" align="center" />
+            <el-table-column prop="alarmhostip" label="主机IP" width="120" align="center" />
+            <el-table-column prop="alarminfo" label="问题" width="120" />
+            <el-table-column prop="alarmstarttime" label="报警时间" width="120" />
+            <el-table-column prop="alarmhostonwer" label="负责人" width="120" align="center" />
           </el-table>
         </el-card>
       </div>
@@ -112,7 +107,7 @@ import {
   ElIcon,
 } from 'element-plus'
 
-import { ref } from 'vue'
+import {onMounted, ref} from 'vue'
 import { ElTable } from 'element-plus'
 import axios from 'axios';
 interface Hostinfo {
@@ -121,21 +116,84 @@ interface Hostinfo {
   alarmtype: string
   alarmhoststatus: boolean
   alarmhostip: string
-  alarmissues: number
+  alarminfo: number
   alarmhostlocation: string
-  alarmhostowner: string
-  alarmtime: string
+  alarmhostonwer: string
+  alarmstarttime: string
+}
+onMounted(() => {
+  alarmstatistics()
+})
+const alarmtypestring= (row)=>{
+  if (row.alarmtype === 4011) {
+    return '所有报警'
+  } else  if (row.alarmtype === 1000 ){
+    return '应用服务类'
+  }else  if (row.alarmtype === 1004){
+    return '网络类'
+  } else  if (row.alarmtype === 1001){
+    return '系统服务类'
+  }else  if (row.alarmtype === 1006) {
+    return '硬件类'
+  }
 }
 const tableData = ref<Hostinfo[]>([])
-const hostlistdata = () => {
-  axios.get('http://192.168.0.117:8081/hostlistdata').then(
-      reponse =>{
-        console.log("请求数据成功了:",reponse.data)
-        tableData.value = reponse.data.List;
+const alarmtodaytotal = ref(0)
+const alarmofflinetoday = ref(0)
+const alarmaddtodayonline= ref(0)
+const alarmtotal = ref(0)
+const alarmonline = ref(0)
+const  alarmoffline = ref(0)
+const alarmstatistics = () => {
+
+  axios.post('http://127.0.0.1:8081/statisticsdata', {
+    statisticstype: "alarmtotal",
+  }).then(
+      reponse => {
+        alarmtotal.value = reponse.data.data;
       },
       error => {
-        console.log("请求数据失败了:",error.message)
-      })
+        console.log("请求数据失败了:", error.message)
+      });
+  axios.post('http://127.0.0.1:8081/statisticsdata', {
+    statisticstype: "alarmonline",
+  }).then(
+      reponse => {
+        alarmonline.value = reponse.data.data;
+        alarmoffline.value= alarmtotal.value - alarmonline.value
+      },
+      error => {
+        console.log("请求数据失败了:", error.message)
+      });
+  axios.post('http://127.0.0.1:8081/statisticsdata', {
+    statisticstype: "alarmtodaytotal"
+  }).then(
+      reponse => {
+        alarmtodaytotal.value = reponse.data.data;
+      },
+      error => {
+        console.log("请求数据失败了:", error.message)
+      });
+  axios.post('http://127.0.0.1:8081/statisticsdata', {
+    statisticstype: "alarmaddtoday"
+  }).then(
+      reponse => {
+        alarmaddtodayonline.value = reponse.data.data;
+        alarmofflinetoday.value = alarmtodaytotal.value - alarmaddtodayonline.value
+      },
+      error => {
+        console.log("请求数据失败了:", error.message)
+      });
+  axios.post('http://127.0.0.1:8081/statisticsdata', {
+    statisticstype: "alarmonlineinit"
+  }).then(
+      reponse => {
+        console.log("请求数据成功")
+        tableData.value = reponse.data.data;
+      },
+      error => {
+        console.log("请求数据失败了:", error.message)
+      });
 }
 
 </script>

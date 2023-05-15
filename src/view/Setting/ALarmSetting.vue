@@ -6,7 +6,7 @@
           <el-row :gutter="16">
             <el-col :span="8">
               <div class="statistic-card">
-                <el-statistic :value="10">
+                <el-statistic :value="alarmtotal">
                   <template #title>
                     <div style="display: inline-flex; align-items: center">
                       报警数量总计
@@ -17,7 +17,7 @@
                   <div class="footer-item">
                     <span>增加数量</span>
                     <span class="red">
-              6
+              {{ alarmtodaytotal }}
               <el-icon>
                 <CaretTop />
               </el-icon>
@@ -28,7 +28,7 @@
             </el-col>
             <el-col :span="8">
               <div class="statistic-card">
-                <el-statistic :value="5">
+                <el-statistic :value="alarmonline">
                   <template #title>
                     <div style="display: inline-flex; align-items: center">
                       正在进行的报警
@@ -39,7 +39,7 @@
                   <div class="footer-item">
                     <span>今日新增报警</span>
                     <span class="red">
-              10
+              {{alarmaddtodayonline}}
               <el-icon>
                 <CaretTop/>
               </el-icon>
@@ -50,7 +50,7 @@
             </el-col>
             <el-col :span="8">
               <div class="statistic-card">
-                <el-statistic :value="50" title="New transactions today">
+                <el-statistic :value="alarmoffline" title="New transactions today">
                   <template #title>
                     <div style="display: inline-flex; align-items: center">
                       已处理报警数量
@@ -59,9 +59,9 @@
                 </el-statistic>
                 <div class="statistic-footer">
                   <div class="footer-item">
-                    <span>今日处理报警</span>
+                    <span>新增已处理报警</span>
                     <span class="green">
-              5
+              {{alarmofflinetoday}}
               <el-icon>
                 <CaretTop/>
               </el-icon>
@@ -188,10 +188,12 @@ interface alarminfo {
   alarmtime: string
 }
 let form: alarminfo
+const alarmtodaytotal = ref(0)
+const alarmofflinetoday = ref(0)
+const alarmaddtodayonline= ref(0)
 const alarmtotal = ref(0)
 const alarmonline = ref(0)
 const  alarmoffline = ref(0)
-const addalarmtotal = ref(0)
 const onlinerate = ref(0)
 const offlinerate = ref(0)
 const hoststatus = ref(true)
@@ -387,8 +389,15 @@ const alarmstatistics = () => {
       reponse => {
         alarmonline.value = reponse.data.data;
         alarmoffline.value= alarmtotal.value - alarmonline.value
-        onlinerate.value = Math.floor((alarmonline.value / alarmtotal.value) * 100)
-        offlinerate.value = Math.floor((alarmoffline.value / alarmtotal.value) * 100)
+      },
+      error => {
+        console.log("请求数据失败了:", error.message)
+      });
+  axios.post('http://127.0.0.1:8081/statisticsdata', {
+    statisticstype: "alarmtodaytotal"
+  }).then(
+      reponse => {
+        alarmtodaytotal.value = reponse.data.data;
       },
       error => {
         console.log("请求数据失败了:", error.message)
@@ -397,7 +406,8 @@ const alarmstatistics = () => {
     statisticstype: "alarmaddtoday"
   }).then(
       reponse => {
-        addalarmtotal.value = reponse.data.data;
+        alarmaddtodayonline.value = reponse.data.data;
+        alarmofflinetoday.value = alarmtodaytotal.value - alarmaddtodayonline.value
       },
       error => {
         console.log("请求数据失败了:", error.message)
