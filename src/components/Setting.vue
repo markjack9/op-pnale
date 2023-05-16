@@ -18,7 +18,7 @@
       </el-menu-item>
       <el-menu-item  @click="onswitchviewback(3)" index="3">
         <el-icon><setting /></el-icon>
-        <template #title>报警媒介设置</template>
+        <template #title>报警设置</template>
       </el-menu-item>
       <el-menu-item  @click="onswitchviewback(4)" index="4">
         <el-icon><DataLine /></el-icon>

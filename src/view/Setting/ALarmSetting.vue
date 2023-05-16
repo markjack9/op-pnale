@@ -153,7 +153,7 @@
             <el-table-column prop="alarmhostname" label="主机名" width="120" align="center"/>
             <el-table-column prop="alarmtype" :formatter="alarmtypestring" align="center"  label="报警类型" width="120" class-name="alarmtypestr"/>
             <el-table-column prop="alarmstatus" :formatter="statusicon" align="center" label="报警状态" width="120" />
-            <el-table-column prop="alarmowner" label="负责人" width="120" align="center" />
+            <el-table-column prop="alarmhostonwer" label="负责人" width="120" align="center" />
           </el-table>
         </el-card>
       </div>
@@ -184,8 +184,8 @@ interface alarminfo {
   alarmstatus: number
   alarmalarmip: string
   alarmissues: number
-  alarmowner: string
-  alarmtime: string
+  alarmhostonwer: string
+  alarmstarttime: string
 }
 let form: alarminfo
 const alarmtodaytotal = ref(0)
@@ -267,7 +267,7 @@ const handleSelectionChange = (val: alarminfo[]) => {
   addform.alarmid = form.alarmid
   addform.alarmhostname = form.alarmhostname
   addform.alarmtype = form.alarmtype
-  addform.alarmowner = form.alarmowner
+  addform.alarmowner = form.alarmhostonwer
   if (form.alarmstatus === 0){
     hoststatus.value = false
   }else if (form.alarmstatus === 1) {
