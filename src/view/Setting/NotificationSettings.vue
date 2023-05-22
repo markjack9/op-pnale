@@ -12,10 +12,10 @@
                   </template>
                   <el-form :model="notiapiform" label-width="120px">
                     <el-form-item label="API接口" >
-                      <el-input v-model="notiapiform.dingapiurl" type="textarea" placeholder="钉钉接口链接"/>
+                      <el-input v-model="notiapiform.dingapiurl" type="textarea" placeholder="钉钉接口链接" @input="changinput"/>
                     </el-form-item>
                     <el-form-item label="通知用户">
-                      <el-input v-model="notiapiform.dingatuser" placeholder="@通知的用户"/>
+                      <el-input v-model="notiapiform.dingatuser" placeholder="@通知的用户" @input="changinput"/>
                       <el-button class="confirmation-button" @click="confirmation('notiok')">保存</el-button>
                     </el-form-item>
 
@@ -32,10 +32,10 @@
                   </template>
                   <el-form :model="notiapiform" label-width="120px">
                     <el-form-item label="API接口">
-                      <el-input v-model="notiapiform.workapiurl" type="textarea" placeholder="企业微信接口链接"/>
+                      <el-input v-model="notiapiform.workapiurl" type="textarea" placeholder="企业微信接口链接" @input="changinput"/>
                     </el-form-item>
                     <el-form-item label="通知用户">
-                      <el-input v-model="notiapiform.workatuser" placeholder="@通知的用户"/>
+                      <el-input v-model="notiapiform.workatuser" placeholder="@通知的用户" @input="changinput"/>
                       <el-button class="confirmation-button" @click="confirmation('notiok')">保存</el-button>
 
                     </el-form-item>
@@ -59,13 +59,13 @@
                   />
                   <el-form :model="notithresolad" label-width="120px">
                     <el-form-item label="处理器使用率">
-                      <el-input v-model="notithresolad.cpuoption"/>
+                      <el-input v-model="notithresolad.cpuoption" @input="changinput"/>
                     </el-form-item>
                     <el-form-item label="内存使用率">
-                      <el-input v-model="notithresolad.memoryoption"/>
+                      <el-input v-model="notithresolad.memoryoption" @input="changinput"/>
                     </el-form-item>
                     <el-form-item label="系统磁盘使用率">
-                      <el-input v-model="notithresolad.systemdiskoption"/>
+                      <el-input v-model="notithresolad.systemdiskoption" @input="changinput"/>
                     </el-form-item>
                   </el-form>
                   <el-button class="confirmation-button" @click="confirmation('updatethreshold')">保存</el-button>
@@ -83,8 +83,9 @@
 <script lang="ts" setup>
 import {onMounted, reactive} from 'vue'
 import { ref } from 'vue'
-import axios from "axios";
-
+import axios from "axios"
+import {stringify} from "qs";
+import {number} from "echarts";
 let worknotiapi = reactive({
   notiapi: {
     workapiurl: "",
@@ -111,7 +112,9 @@ let notithresolad = reactive({
   systemdiskoption: 0,
   thresholadstatus: 0,
 })
-
+const changinput = () =>{
+  this.$forceUpdate()
+}
 const statuswitch = () => {
   if (notithresolad.thresholadstatus === 1){
     notithresolad.thresholadstatus = 0
@@ -123,7 +126,7 @@ const openstatus = ref(false)
 const openstatusvalue = () => {
   if (notithresolad.thresholadstatus === 1){
     openstatus.value = true
-  }else {
+  }else if (notithresolad.thresholadstatus === 0) {
     openstatus.value = false
   }
 }
@@ -133,7 +136,7 @@ onMounted(() => {
 const confirmation = (option: string) => {
 if (option === 'notiok'){
   axios.post('http://127.0.0.1:8081/alarmsetting', {
-    alarmsettingoption: "updatenoti",
+    alarmoption: "updatenoti",
     notiapi: {
       workapiurl: notiapiform.workapiurl,
       dingapiurl: notiapiform.dingapiurl,
@@ -151,18 +154,17 @@ if (option === 'notiok'){
     console.log("错误信息", error)
   });
 }else if (option === 'updatethreshold'){
-  console.log(notithresolad)
-  axios.post('http://127.0.0.1:8081/alarmsetting', {
-    alarmsettingoption: "updatethreshold",
-    cpuoption: notithresolad.cpuoption,
-    memoryoption: notithresolad.memoryoption,
-    systemdiskoption: notithresolad.systemdiskoption,
+  axios.post('http://127.0.0.1:8081/alarmsetting',  {
+    alarmoption: "updatethreshold",
+    cpuoption: Number(notithresolad.cpuoption),
+    memoryoption:  Number(notithresolad.memoryoption),
+    systemdiskoption:  Number(notithresolad.systemdiskoption),
     thresholadstatus: notithresolad.thresholadstatus,
   }).then((res) => {
     if (res.data.code === 1000) {
       console.log('success')
     } else {
-      console.log(notithresolad)
+      console.log(res.data)
     }
 
   }).catch(function (error) {
@@ -172,7 +174,7 @@ if (option === 'notiok'){
 
 else if (option === 'init'){
   axios.post('http://127.0.0.1:8081/alarmsetting', {
-    alarmsettingoption: "optioninit"
+    alarmoption: "optioninit"
   }).then((res) => {
     if (res.data.code === 1000) {
       worknotiapi= res.data.data
