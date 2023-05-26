@@ -99,7 +99,7 @@
                 <el-switch v-model="hoststatus" disabled/>
               </el-form-item>
               <el-form-item label="报警处理人员">
-                <el-input v-model="addform.alarmowner" disabled/>
+                <el-input v-model="addform.alarmhostonwer" disabled/>
               </el-form-item>
               <el-form-item>
                 <el-button @click="todoeseeitem = false;toggleSelection()">关闭</el-button>
@@ -132,7 +132,7 @@
               </el-form-item>
 
               <el-form-item label="报警处理人员">
-                <el-input v-model="addform.alarmowner" placeholder=""/>
+                <el-input v-model="addform.alarmhostonwer" placeholder=""/>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="todoedititem = false;todoalarmlist('change')">确定
@@ -220,7 +220,7 @@ const addform = reactive({
   alarmhostname: "",
   alarmtype: 0,
   alarmstatus: 1,
-  alarmowner: "",
+  alarmhostonwer: "",
 })
 const alarmtype = ref([])
 const alarmtypeoption = [
@@ -267,7 +267,7 @@ const handleSelectionChange = (val: alarminfo[]) => {
   addform.alarmid = form.alarmid
   addform.alarmhostname = form.alarmhostname
   addform.alarmtype = form.alarmtype
-  addform.alarmowner = form.alarmhostonwer
+  addform.alarmhostonwer = form.alarmhostonwer
   if (form.alarmstatus === 0){
     hoststatus.value = false
   }else if (form.alarmstatus === 1) {
@@ -346,14 +346,14 @@ onMounted(() => {
 })
 const todoalarmlist = (option: string) => {
   if (option == 'change') {
-    console.log(addform)
-    axios.post('http://127.0.0.1:8081/statisticsdata', {
-      statisticstype: "alarmedit",
+console.log(addform)
+    axios.post('http://127.0.0.1:8081/alarmsetting', {
+      alarmoption: "alarmedit",
       alarmlist: {
         alarmhostname: addform.alarmhostname,
         alarmtype: optionstr,
         alarmstatus: addform.alarmstatus,
-        alarmowner: addform.alarmowner,
+        alarmhostonwer: addform.alarmhostonwer,
         alarmid:addform.alarmid,
       }
     }).then((res) => {

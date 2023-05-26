@@ -108,11 +108,22 @@
                 <el-input v-model="addform.jobshell" type="textarea" disabled/>
               </el-form-item>
               <el-form-item label="crond表达式">
-                <el-input v-model="addform.jobcronexpr" type="textarea" placeholder=""/>
+                <el-input v-model="addform.jobcronexpr" type="textarea" placeholder="" disabled/>
               </el-form-item>
               <el-form-item>
                 <el-button @click="todoeseeitem = false;toggleSelection()">关闭</el-button>
               </el-form-item>
+              <el-table
+                  :data="jobdatatable"
+                  style="width: 100%"
+                  class="job-card-list"
+              >
+                <el-table-column prop="jobstarttime" align="center" label="开始时间" width="120"/>
+                <el-table-column prop="jobstoptime" align="center"  label="结束时间" width="120"/>
+                <el-table-column prop="jobrunning" align="center"  label="持续时间" width="120"/>
+                <el-table-column prop="jobinfo" align="center"  label="任务输出" width="120" show-overflow-tooltip />
+                <el-table-column prop="joberr" align="center"  label="错误日志" width="120" show-overflow-tooltip />
+              </el-table>
             </el-form>
           </el-dialog>
           <el-button @click="todoadditem = true">添加</el-button>
@@ -221,6 +232,14 @@ import {ElIcon, ElMessage, ElMessageBox, ElTable,} from 'element-plus'
 import {onMounted, reactive, ref} from 'vue'
 import axios from 'axios';
 
+interface jobdatainfo {
+  jobstarttime: string
+  jobstoptime: string
+  jobrunning: string
+  jobinfo: string
+  joberr: string
+}
+
 interface jobinfo {
   jobid: number
   jobname: string
@@ -229,7 +248,7 @@ interface jobinfo {
   jobcronexpr: string
   jobshell: string
 }
-
+const jobdatatable = ref<jobdatainfo[]>([])
 let form: jobinfo
 const jobtotal = ref(0)
 const jobonline = ref(0)
@@ -324,6 +343,7 @@ const openitem = () => {
     Selectnoti()
   } else {
     todoeseeitem.value = true
+    todojoblist('selectjob')
   }
 
 }
@@ -333,9 +353,6 @@ const Selectnoti = () => {
     confirmButtonText: '好的',
   })
 }
-
-
-
 const DeleteNoti = () => {
   ElMessageBox.confirm(
       '您确认删除此条记录吗？',
@@ -355,7 +372,10 @@ const DeleteNoti = () => {
         axios.post('http://127.0.0.1:8081/crontab', {
           parameoption: "del",
           crontabjob: {
-            jobid: form.jobid
+            jobid: Number(form.jobid),
+          },
+          job: {
+            name: form.jobname,
           }
         }).then((res) => {
           if (res.data.code === 1000) {
@@ -459,6 +479,20 @@ const todojoblist = (option: string) => {
     }).catch(function (error) {
       console.log("错误信息", error)
     });
+  } else if (option == 'selectjob'){
+    axios.post('http://127.0.0.1:8081/crontab', {
+      parameoption: "taskjobselect",
+      crontabjob: {
+        jobname: addform.jobname
+      }
+    }).then(
+        reponse => {
+          console.log("请求数据成功")
+          jobdatatable.value = reponse.data.data;
+        },
+        error => {
+          console.log("请求数据失败了:", error.message)
+        });
   }
 
 }

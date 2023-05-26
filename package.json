@@ -29,7 +29,9 @@
     "vue": "^3.2.47",
     "vue-echarts": "^6.5.5",
     "vue-router": "^4.0.13",
-    "vuex": "^4.0.2"
+    "vuex": "^4.0.2",
+    "xterm": "^5.1.0",
+    "xterm-addon-fit": "^0.7.0"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",
