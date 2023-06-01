@@ -12,7 +12,7 @@
                   </template>
                   <el-form :model="notiapiform" label-width="120px">
                     <el-form-item label="API接口" >
-                      <el-input v-model="notiapiform.dingapiurl" type="textarea" placeholder="钉钉接口链接" @input="changinput"/>
+                      <el-input v-model="notiapiform.dingapiurl" type="textarea" placeholder="钉钉接口链接" @input="changinput" clearable/>
                     </el-form-item>
                     <el-form-item label="通知用户">
                       <el-input v-model="notiapiform.dingatuser" placeholder="@通知的用户" @input="changinput"/>
@@ -32,7 +32,7 @@
                   </template>
                   <el-form :model="notiapiform" label-width="120px">
                     <el-form-item label="API接口">
-                      <el-input v-model="notiapiform.workapiurl" type="textarea" placeholder="企业微信接口链接" @input="changinput"/>
+                      <el-input v-model="notiapiform.workapiurl" type="textarea" placeholder="企业微信接口链接" @input="changinput" clearable/>
                     </el-form-item>
                     <el-form-item label="通知用户">
                       <el-input v-model="notiapiform.workatuser" placeholder="@通知的用户" @input="changinput"/>

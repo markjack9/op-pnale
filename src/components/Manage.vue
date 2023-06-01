@@ -13,12 +13,12 @@
         <template #title>ssh远程工具</template>
       </el-menu-item>
       <el-menu-item @click="onswitchviewback(2)" index="2">
-        <el-icon><Monitor /></el-icon>
-        <template #title>windows工具</template>
-      </el-menu-item>
-      <el-menu-item @click="onswitchviewback(3)" index="4">
         <el-icon><Files /></el-icon>
         <template #title>文件管理</template>
+      </el-menu-item>
+      <el-menu-item @click="onswitchviewback(3)" index="3">
+        <el-icon><Files/></el-icon>
+        <template #title>日志管理</template>
       </el-menu-item>
     </el-menu>
     <el-radio-group v-model="isCollapse">
@@ -38,20 +38,21 @@
 import {ref, shallowRef} from 'vue'
 import PublicHeader from "./Header.vue"
 import {
-  Document, Monitor, CreditCard, Files,
+  Monitor, CreditCard, Files,
 } from '@element-plus/icons-vue'
 import SshTool from "../view/Manage/SshTool.vue";
 import WinTool from "../view/Manage/WinTool.vue";
 import FileManage from "../view/Manage/FileManage.vue";
+import LogManage from "../view/Manage/LogManage.vue";
 const isCollapse = ref(false)
 const comId = shallowRef(SshTool)
 const onswitchviewback = (key:number) => {
   if (key === 1 ){
     comId.value = SshTool
   } else if (key === 2 ) {
-    comId.value = WinTool
-  }else if (key === 3 ) {
     comId.value = FileManage
+  }else if (key === 3 ) {
+    comId.value = LogManage
   }
 }
 const handleOpen = (key: string, keyPath: string[]) => {
