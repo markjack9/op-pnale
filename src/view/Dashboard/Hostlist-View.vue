@@ -143,7 +143,7 @@ const statusicon = (row)=> {
 }
 const hoststatistics = () => {
 
-  axios.post('http://127.0.0.1:8081/statisticsdata', {
+  axios.post('http://192.168.0.117:8081/statisticsdata', {
     statisticstype: "hosttotal",
   }).then(
       reponse => {
@@ -152,7 +152,7 @@ const hoststatistics = () => {
       error => {
         console.log("请求数据失败了:", error.message)
       });
-  axios.post('http://127.0.0.1:8081/statisticsdata', {
+  axios.post('http://192.168.0.117:8081/statisticsdata', {
     statisticstype: "hostonline",
   }).then(
       reponse => {
@@ -164,7 +164,7 @@ const hoststatistics = () => {
       error => {
         console.log("请求数据失败了:", error.message)
       });
-  axios.post('http://127.0.0.1:8081/statisticsdata', {
+  axios.post('http://192.168.0.117:8081/statisticsdata', {
     statisticstype: "hostaddtoday"
   }).then(
       reponse => {
@@ -176,7 +176,7 @@ const hoststatistics = () => {
 }
 const tableData = ref<Hostinfo[]>([])
 const hostlistdata = () => {
-    axios.post('http://127.0.0.1:8081/hostlistdata', {
+    axios.post('http://192.168.0.117:8081/hostlistdata', {
         typeoperation: "hostinit"
     }).then(
         reponse => {

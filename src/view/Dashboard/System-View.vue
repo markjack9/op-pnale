@@ -100,7 +100,7 @@ const colors = [
     {color: '#ff0000', percentage: 100},
 ]
 const serverinfo = () => {
-  axios.post('http://127.0.0.1:8081/clientdata', {
+  axios.post('http://192.168.0.117:8081/clientdata', {
     parametertype: "systeminfoget",
     clientparame: {
       optionip: "192.168.0.117",
@@ -116,7 +116,7 @@ const serverinfo = () => {
 onMounted(() => {
   serverinfo()
     setInterval(() => {
-      axios.post('http://127.0.0.1:8081/systemview', {
+      axios.post('http://192.168.0.117:8081/systemview', {
         parametertype: "cpu"
       }).then((res) => {
         cpu.value = Number(res.data.data)
@@ -124,7 +124,7 @@ onMounted(() => {
         // handle error
         console.log(error);
       });
-      axios.post('http://127.0.0.1:8081/systemview', {
+      axios.post('http://192.168.0.117:8081/systemview', {
         parametertype: "mp"
       }).then((res) => {
         mp.value = Number(res.data.data)
@@ -132,7 +132,7 @@ onMounted(() => {
         // handle error
         console.log(error);
       });
-      axios.post('http://127.0.0.1:8081/systemview', {
+      axios.post('http://192.168.0.117:8081/systemview', {
         parametertype: "fdp"
       }).then((res) => {
         fdp.value = Number(res.data.data)
@@ -140,7 +140,7 @@ onMounted(() => {
         // handle error
         console.log(error);
       });
-        axios.post('http://127.0.0.1:8081/systemview', {
+        axios.post('http://192.168.0.117:8081/systemview', {
             parametertype: "uns"
         }).then((res) => {
             uns.value = Number(res.data.data)
@@ -159,7 +159,7 @@ onMounted(() => {
             // handle error
             console.log(error);
         });
-        axios.post('http://127.0.0.1:8081/systemview', {
+        axios.post('http://192.168.0.117:8081/systemview', {
             parametertype: "dns"
         }).then((res) => {
             dns.value = Number(res.data.data)

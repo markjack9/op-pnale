@@ -15,7 +15,6 @@
             <el-table-column prop="systemloghostname" label="影响主机" width="120" align="center" />
             <el-table-column prop="systemlognote" label="处理结果" width="120" show-overflow-tooltip />
             <el-table-column prop="systemlogstarttime" label="发生时间" width="120" />
-            <el-table-column prop="systemloghostonwer" label="负责人" width="120" align="center" />
           </el-table>
         </el-card>
 
@@ -39,11 +38,10 @@ interface Hostinfo {
   systemlogtype: string
   systemloghostip: string
   systemloginfo: string
-  systemloghostonwer: string
   systemlogstarttime: string
 }
 const systemloglog= () => {
-  axios.post('http://127.0.0.1:8081/crontab', {
+  axios.post('http://192.168.0.117:8081/crontab', {
     parameoption: "logmsgsystem",
   }).then(
       reponse => {

@@ -146,7 +146,7 @@ const alarmonline = ref(0)
 const  alarmoffline = ref(0)
 const alarmstatistics = () => {
 
-  axios.post('http://127.0.0.1:8081/statisticsdata', {
+  axios.post('http://192.168.0.117:8081/statisticsdata', {
     statisticstype: "alarmtotal",
   }).then(
       reponse => {
@@ -155,7 +155,7 @@ const alarmstatistics = () => {
       error => {
         console.log("请求数据失败了:", error.message)
       });
-  axios.post('http://127.0.0.1:8081/statisticsdata', {
+  axios.post('http://192.168.0.117:8081/statisticsdata', {
     statisticstype: "alarmonline",
   }).then(
       reponse => {
@@ -165,7 +165,7 @@ const alarmstatistics = () => {
       error => {
         console.log("请求数据失败了:", error.message)
       });
-  axios.post('http://127.0.0.1:8081/statisticsdata', {
+  axios.post('http://192.168.0.117:8081/statisticsdata', {
     statisticstype: "alarmtodaytotal"
   }).then(
       reponse => {
@@ -174,7 +174,7 @@ const alarmstatistics = () => {
       error => {
         console.log("请求数据失败了:", error.message)
       });
-  axios.post('http://127.0.0.1:8081/statisticsdata', {
+  axios.post('http://192.168.0.117:8081/statisticsdata', {
     statisticstype: "alarmaddtoday"
   }).then(
       reponse => {
@@ -184,7 +184,7 @@ const alarmstatistics = () => {
       error => {
         console.log("请求数据失败了:", error.message)
       });
-  axios.post('http://127.0.0.1:8081/statisticsdata', {
+  axios.post('http://192.168.0.117:8081/statisticsdata', {
     statisticstype: "alarmonlineinit"
   }).then(
       reponse => {

@@ -135,7 +135,7 @@ onMounted(() => {
 })
 const confirmation = (option: string) => {
 if (option === 'notiok'){
-  axios.post('http://127.0.0.1:8081/alarmsetting', {
+  axios.post('http://192.168.0.117:8081/alarmsetting', {
     alarmoption: "updatenoti",
     notiapi: {
       workapiurl: notiapiform.workapiurl,
@@ -154,7 +154,7 @@ if (option === 'notiok'){
     console.log("错误信息", error)
   });
 }else if (option === 'updatethreshold'){
-  axios.post('http://127.0.0.1:8081/alarmsetting',  {
+  axios.post('http://192.168.0.117:8081/alarmsetting',  {
     alarmoption: "updatethreshold",
     cpuoption: Number(notithresolad.cpuoption),
     memoryoption:  Number(notithresolad.memoryoption),
@@ -173,7 +173,7 @@ if (option === 'notiok'){
 }
 
 else if (option === 'init'){
-  axios.post('http://127.0.0.1:8081/alarmsetting', {
+  axios.post('http://192.168.0.117:8081/alarmsetting', {
     alarmoption: "optioninit"
   }).then((res) => {
     if (res.data.code === 1000) {

@@ -1,5 +1,7 @@
 <template>
- <PublicHeader></PublicHeader>
+<div>
+  <PublicHeader></PublicHeader>
+</div>
 
     <div  class="left-rail">
       <el-menu
@@ -34,8 +36,6 @@
     <div class="g-context">
       <component :is="comId"></component>
     </div>
-
-
 </template>
 <style >
 

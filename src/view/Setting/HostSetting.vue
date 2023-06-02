@@ -381,7 +381,7 @@ const DeleteNoti = () => {
                 message: '删除成功',
             })
             console.log("删除数据",form.hostid)
-            axios.post('http://127.0.0.1:8081/hostlistdata', {
+            axios.post('http://192.168.0.117:8081/hostlistdata', {
                 typeoperation: "del",
                 hostlist: {
                     hostid: form.hostid
@@ -423,7 +423,7 @@ const todohostlist = (option: string) => {
         } else {
             seeform.hoststatus = 0
         }
-      axios.post('http://127.0.0.1:8081/hostlistdata', {
+      axios.post('http://192.168.0.117:8081/hostlistdata', {
             typeoperation: "add",
             hostlist: {
                 hostname: seeform.hostname,
@@ -449,7 +449,7 @@ const todohostlist = (option: string) => {
             console.log("错误信息", error)
         });
     } else if (option == 'change') {
-        axios.post('http://127.0.0.1:8081/hostlistdata', {
+        axios.post('http://192.168.0.117:8081/hostlistdata', {
             typeoperation: "edit",
             hostlist: {
                 hostid: form.hostid,
@@ -479,7 +479,7 @@ const todohostlist = (option: string) => {
 }
 const hoststatistics = () => {
 
-  axios.post('http://127.0.0.1:8081/statisticsdata', {
+  axios.post('http://192.168.0.117:8081/statisticsdata', {
     statisticstype: "hosttotal",
   }).then(
       reponse => {
@@ -488,7 +488,7 @@ const hoststatistics = () => {
       error => {
         console.log("请求数据失败了:", error.message)
       });
-  axios.post('http://127.0.0.1:8081/statisticsdata', {
+  axios.post('http://192.168.0.117:8081/statisticsdata', {
     statisticstype: "hostonline",
   }).then(
       reponse => {
@@ -500,7 +500,7 @@ const hoststatistics = () => {
       error => {
         console.log("请求数据失败了:", error.message)
       });
-  axios.post('http://127.0.0.1:8081/statisticsdata', {
+  axios.post('http://192.168.0.117:8081/statisticsdata', {
     statisticstype: "hostaddtoday"
   }).then(
       reponse => {
@@ -511,7 +511,7 @@ const hoststatistics = () => {
       });
 }
 const hostsettingdata = () => {
-    axios.post('http://127.0.0.1:8081/hostlistdata', {
+    axios.post('http://192.168.0.117:8081/hostlistdata', {
         typeoperation: "init"
     }).then(
         reponse => {

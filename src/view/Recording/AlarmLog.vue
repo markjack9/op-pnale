@@ -15,7 +15,6 @@
             <el-table-column prop="alarmhostip" label="主机IP" width="120" align="center" />
             <el-table-column prop="alarminfo" label="问题" width="120" />
             <el-table-column prop="alarmstarttime" label="报警时间" width="120" />
-            <el-table-column prop="alarmhostonwer" label="负责人" width="120" align="center" />
           </el-table>
         </el-card>
 
@@ -41,11 +40,10 @@ interface Hostinfo {
   alarmhostip: string
   alarminfo: number
   alarmhostlocation: string
-  alarmhostonwer: string
   alarmstarttime: string
 }
 const alarmlog= () => {
-  axios.post('http://127.0.0.1:8081/crontab', {
+  axios.post('http://192.168.0.117:8081/crontab', {
     parameoption: "logmsgget",
   }).then(
       reponse => {
