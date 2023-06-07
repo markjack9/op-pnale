@@ -86,7 +86,7 @@
             <el-table-column prop="alarmhostip" label="主机IP" width="120" align="center" />
             <el-table-column prop="alarminfo" label="问题" width="120" />
             <el-table-column prop="alarmstarttime" label="报警时间" width="120" />
-            <el-table-column prop="alarmhostonwer" label="负责人" width="120" align="center" />
+            <el-table-column prop="alarmhostonwer" label="管理员" width="120" align="center" />
           </el-table>
         </el-card>
       </div>
